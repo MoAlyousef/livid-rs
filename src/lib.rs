@@ -5,4 +5,4 @@ pub use events::Event;
 mod styles;
 pub use styles::Style;
 mod widget;
-pub use widget::Widget;
+pub use widget::{document, body, window, Widget};

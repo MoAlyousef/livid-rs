@@ -1,14 +1,20 @@
 use crate::events::{get_event_str, Event};
 use crate::styles::{get_style_str, Style};
 use crate::types::{get_element_str, WidgetType};
-use std::cell::RefCell;
 use std::ops::{Deref, DerefMut};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
-thread_local! {
-    pub static WINDOW: RefCell<web_sys::Window> = RefCell::from(web_sys::window().unwrap());
-    pub static DOCUMENT: RefCell<web_sys::Document> = RefCell::from(WINDOW.with(|w| w.clone()).borrow().document().unwrap());
+pub fn window() -> web_sys::Window {
+    web_sys::window().expect("No global window found!")
+}
+
+pub fn document() -> web_sys::Document {
+    window().document().expect("No document found!")
+}
+
+pub fn body() -> web_sys::HtmlElement {
+    document().body().expect("No body found!")
 }
 
 #[derive(Debug, Clone)]
@@ -19,9 +25,12 @@ pub struct Widget {
 impl Widget {
     pub fn new(typ: WidgetType) -> Self {
         let typ = get_element_str(typ);
-        let doc = DOCUMENT.with(|d| d.clone());
-        let elem = doc.borrow().create_element(typ).unwrap();
-        doc.borrow().body().unwrap().append_child(&elem).unwrap();
+        let doc = document();
+        let elem = doc.create_element(typ).unwrap();
+        doc.body().unwrap().append_child(&elem).unwrap();
+        Self { elem }
+    }
+    pub fn from(elem: web_sys::Element) -> Self {
         Self { elem }
     }
     pub fn add_callback<F: 'static + FnMut(&Self)>(&self, event: Event, mut cb: F) {
