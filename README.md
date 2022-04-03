@@ -1,14 +1,14 @@
 # livid-rs
 
-livid is a lightweight frontend Rust crate.
+livid is a lightweight frontend Rust crate for creating web apps via webassembly. It's also light on macros!
 
 ## Requirements
 - The wasm32-unknown-unknown target:
-- `rustup target add wasm32-unknown-unknown`
+`rustup target add wasm32-unknown-unknown`
 
 ## Usage
 - Install the trunk crate (to simplify building and bundling your web app):
-- `cargo install trunk`
+`cargo install trunk`
 
 - Create an index.html file in your root directory:
 ```html
@@ -22,38 +22,54 @@ livid is a lightweight frontend Rust crate.
 - Create a project:
 ```toml
 [dependencies]
-livid = { git = "https://github.com/MoAlyousef/livid-rs" }
+livid = "0.1"
 ```
 
 ```rust
 use livid::{Event, Style, Widget, WidgetType, document};
-use std::cell::RefCell;
-use std::rc::Rc;
+
+fn btn() -> Widget {
+    Widget::new(WidgetType::Button)
+}
+
+fn div() -> Widget {
+    Widget::new(WidgetType::Div)
+}
+
+fn increment_by(i: i32) {
+    let result = document().get_element_by_id("result").unwrap();
+    let mut old: i32 = result.text_content().unwrap().parse().unwrap();
+    old += i;
+    result.set_text_content(Some(&old.to_string()));
+}
 
 fn main() {
-    let count = Rc::from(RefCell::from(0));
-
-    let btn_inc = Widget::new(WidgetType::Button);
+    let btn_inc = btn();
     btn_inc.set_text_content(Some("Increment"));
     btn_inc.set_style(Style::Color, "green");
-    btn_inc.add_callback(Event::Click, {
-        let cnt = count.clone();
-        move |_| {
-            *cnt.borrow_mut() += 1;
-            let result = document().get_element_by_id("result").unwrap();
-            result.set_text_content(Some(&cnt.borrow().to_string()));
-    }});
+    btn_inc.add_callback(Event::Click, move |_| increment_by(1));
 
-    let div = Widget::new(WidgetType::Div);
-    div.append_child(&btn_inc).unwrap();
+    let btn_dec = btn();
+    btn_dec.set_text_content(Some("Decrement"));
+    btn_dec.set_style(Style::Color, "red");
+    btn_dec.add_callback(Event::Click, move |_| increment_by(-1));
 
-    let result = Widget::new(WidgetType::Div);
+    let main_div = div();
+    main_div.append_child(&btn_inc).unwrap();
+    main_div.append_child(&btn_dec).unwrap();
+
+    let result = div();
     result.set_id("result");
     result.set_text_content(Some("0"));
     result.set_style(Style::FontSize, "22px");
+
+    let btns = document().get_elements_by_tag_name("BUTTON");
+    for i in 0..btns.length() {
+        // set their fontSize to 22 pixesl
+        Widget::from(btns.item(i).unwrap()).set_style(Style::FontSize, "22px");
+    }
 }
 ```
 
 - Build and serve using Trunk:
-- `trunk build`
-- `trunk serve`
+`trunk build` or `trunk serve`

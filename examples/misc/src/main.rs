@@ -36,16 +36,16 @@ fn create_table(data: &Vec<Vec<i32>>) -> Widget {
     let t = table();
     t.set_attribute("border", "1").unwrap();
     let tb = tbody();
-    t.append_child(&*tb).unwrap();
+    t.append(&tb);
     for i in 0..data.len() {
         let tr = tr();
-        tb.append_child(&*tr).unwrap();
+        tb.append(&tr);
 
         for j in 0..data[i].len() {
             let td = td();
             td.set_attribute("width", "100").unwrap();
             td.set_text_content(Some(&data[i][j].to_string()));
-            tr.append_child(&*td).unwrap();
+            tr.append(&td);
         }
     }
     t
@@ -56,7 +56,7 @@ fn main() {
     for i in 0..10 {
         let li = li();
         li.set_text_content(Some(&i.to_string()));
-        ul.append_child(&li).unwrap();
+        ul.append(&li);
     }
 
     let svg = svg();

@@ -1,3 +1,4 @@
+/// Dom events
 pub enum Event {
     Abort,
     Afterprint,

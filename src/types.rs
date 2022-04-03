@@ -1,3 +1,4 @@
+/// Element types
 pub enum WidgetType {
     Address,
     Article,

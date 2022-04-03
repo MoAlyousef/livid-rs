@@ -2,10 +2,18 @@
 name = "livid"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+description = "livid is a lightweight frontend Rust crate for creating web apps via webassembly"
+license = "MIT"
+repository = "https://github.com/MoAlyousef/livid-rs"
+documentation = "https://docs.rs/livid"
+readme = "README.md"
+keywords = ["wasm", "webassembly", "frontend", "framework", "web"]
+categories = ["wasm", "web-programming"]
 
 [dependencies]
-web-sys = { version = "0.3", features= ["Element", "EventTarget", "HtmlElement", "HtmlStyleElement", "Node", "HtmlBodyElement", "Window", "Document", "CssStyleDeclaration", "HtmlCollection"] }
+web-sys = { version = "0.3", features= [
+        "Element", "EventTarget", "HtmlElement", 
+        "HtmlStyleElement", "Node", "HtmlBodyElement", 
+        "Window", "Document", "CssStyleDeclaration", "HtmlCollection"] }
 wasm-bindgen = "0.2"
 lazy_static = "1"
