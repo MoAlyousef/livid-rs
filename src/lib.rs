@@ -6,4 +6,3 @@ mod styles;
 pub use styles::Style;
 mod widget;
 pub use widget::Widget;
-
