@@ -25,17 +25,18 @@ impl Document {
 
     /// Get the global docuement's body
     pub fn body() -> web_sys::HtmlElement {
-        document().body().expect("No body found!")
+        Self::get().body().expect("No body found!")
     }
 
     /// Get the head
     pub fn head() -> web_sys::HtmlHeadElement {
-        document().head().expect("No head element found!")
+        Self::get().head().expect("No head element found!")
     }
 
     /// add a link
     pub fn add_css_link(href: &str) {
-        let link: web_sys::HtmlLinkElement = JsValue::from(document().create_element("link").unwrap()).into();
+        let link: web_sys::HtmlLinkElement =
+            JsValue::from(Document::get().create_element("link").unwrap()).into();
         link.set_rel("stylesheet");
         link.set_type("text/css");
         link.set_href(href);
@@ -53,14 +54,22 @@ impl Widget {
     /// Create a new Widget
     pub fn new(typ: WidgetType) -> Self {
         let typ = get_element_str(typ);
-        let doc = document();
+        let doc = Document::get();
         let elem = doc.create_element(typ).unwrap();
         doc.body().unwrap().append_child(&elem).unwrap();
         Self { elem }
     }
     /// Create a new widget from an existing Element
-    pub fn from(elem: web_sys::Element) -> Self {
+    pub fn from_elem(elem: web_sys::Element) -> Self {
         Self { elem }
+    }
+    /// Create a widget struct from an id
+    pub fn from_id(id: &str) -> Option<Self> {
+        if let Some(elem) = Document::get().get_element_by_id(id) {
+            Some(Self { elem })
+        } else {
+            None
+        }
     }
     /// Add a callback
     pub fn add_callback<F: 'static + FnMut(&Self)>(&self, event: Event, mut cb: F) {
@@ -109,5 +118,37 @@ impl Deref for Widget {
 impl DerefMut for Widget {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.elem
+    }
+}
+
+#[derive(Debug)]
+pub struct ElementIter {
+    list: web_sys::HtmlCollection,
+    index: u32
+}
+
+
+pub trait IsElementIterable {
+    fn iter(&self) -> ElementIter;
+}
+
+impl IsElementIterable for web_sys::HtmlCollection {
+    fn iter(&self) -> ElementIter {
+        ElementIter {
+            list: self.clone(),
+            index: 0
+        }
+    }
+}
+
+impl Iterator for ElementIter {
+    type Item = Widget;
+    fn next( &mut self ) -> Option< Self::Item > {
+        if let Some(item) = self.list.item(self.index) {
+            self.index += 1;
+            Some(Widget::from_elem(item))
+        } else {
+            None
+        }
     }
 }
