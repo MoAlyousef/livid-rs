@@ -1,8 +1,8 @@
 /*!
 
-# livid-rs
+# livid
 
-livid is a lightweight frontend Rust crate for creating web apps via webassembly. It's also light on macros!
+livid is a lightweight frontend Rust crate for creating web apps via webassembly. It's a thin wrapper around web-sys and also light on macros!
 
 ## Requirements
 - The wasm32-unknown-unknown target:
@@ -16,6 +16,9 @@ livid is a lightweight frontend Rust crate for creating web apps via webassembly
 ```html
 <html>
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
 </html>
 ```
@@ -27,8 +30,8 @@ livid is a lightweight frontend Rust crate for creating web apps via webassembly
 livid = "0.1"
 ```
 
-```rust
-use livid::{Event, Style, Widget, WidgetType, document};
+```rust,no_run
+use livid::{Event, Style, Widget, WidgetType, Document};
 
 fn btn() -> Widget {
     Widget::new(WidgetType::Button)
@@ -39,13 +42,15 @@ fn div() -> Widget {
 }
 
 fn increment_by(i: i32) {
-    let result = document().get_element_by_id("result").unwrap();
+    let result = Document::get().get_element_by_id("result").unwrap();
     let mut old: i32 = result.text_content().unwrap().parse().unwrap();
     old += i;
     result.set_text_content(Some(&old.to_string()));
 }
 
 fn main() {
+    Document::get().set_title("Counter");
+
     let btn_inc = btn();
     btn_inc.set_text_content(Some("Increment"));
     btn_inc.set_style(Style::Color, "green");
@@ -65,7 +70,7 @@ fn main() {
     result.set_text_content(Some("0"));
     result.set_style(Style::FontSize, "22px");
 
-    let btns = document().get_elements_by_tag_name("BUTTON");
+    let btns = Document::get().get_elements_by_tag_name("BUTTON");
     for i in 0..btns.length() {
         // set their fontSize to 22 pixesl
         Widget::from(btns.item(i).unwrap()).set_style(Style::FontSize, "22px");
@@ -85,4 +90,4 @@ pub use events::Event;
 mod styles;
 pub use styles::Style;
 mod widget;
-pub use widget::{document, body, window, Widget};
+pub use widget::{Document, Widget};

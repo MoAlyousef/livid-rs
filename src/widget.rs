@@ -6,18 +6,41 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
 /// Get the global window
-pub fn window() -> web_sys::Window {
+fn window() -> web_sys::Window {
     web_sys::window().expect("No global window found!")
 }
 
 /// Get the global document
-pub fn document() -> web_sys::Document {
+fn document() -> web_sys::Document {
     window().document().expect("No document found!")
 }
 
-/// Get the global docuement's body
-pub fn body() -> web_sys::HtmlElement {
-    document().body().expect("No body found!")
+pub struct Document;
+
+impl Document {
+    /// Get the global document
+    pub fn get() -> web_sys::Document {
+        document()
+    }
+
+    /// Get the global docuement's body
+    pub fn body() -> web_sys::HtmlElement {
+        document().body().expect("No body found!")
+    }
+
+    /// Get the head
+    pub fn head() -> web_sys::HtmlHeadElement {
+        document().head().expect("No head element found!")
+    }
+
+    /// add a link
+    pub fn add_css_link(href: &str) {
+        let link: web_sys::HtmlLinkElement = JsValue::from(document().create_element("link").unwrap()).into();
+        link.set_rel("stylesheet");
+        link.set_type("text/css");
+        link.set_href(href);
+        Self::head().append_child(&link).unwrap();
+    }
 }
 
 /// An Html Element wrapper

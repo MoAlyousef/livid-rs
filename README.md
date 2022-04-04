@@ -1,6 +1,6 @@
-# livid-rs
+# livid
 
-livid is a lightweight frontend Rust crate for creating web apps via webassembly. It's also light on macros!
+livid is a lightweight frontend Rust crate for creating web apps via webassembly. It's a thin wrapper around web-sys and also light on macros!
 
 ## Requirements
 - The wasm32-unknown-unknown target:
@@ -14,6 +14,9 @@ livid is a lightweight frontend Rust crate for creating web apps via webassembly
 ```html
 <html>
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
 </html>
 ```
@@ -24,6 +27,8 @@ livid is a lightweight frontend Rust crate for creating web apps via webassembly
 [dependencies]
 livid = "0.1"
 ```
+
+In your Rust source file:
 
 ```rust
 use livid::{Event, Style, Widget, WidgetType, document};
@@ -44,6 +49,8 @@ fn increment_by(i: i32) {
 }
 
 fn main() {
+    document().set_title("Counter");
+
     let btn_inc = btn();
     btn_inc.set_text_content(Some("Increment"));
     btn_inc.set_style(Style::Color, "green");
@@ -73,3 +80,44 @@ fn main() {
 
 - Build and serve using Trunk:
 `trunk build` or `trunk serve`
+
+## Example with CSS
+```rust
+use livid::{Document, Widget, WidgetType::{self, *}};
+
+fn w(typ: WidgetType) -> Widget {
+    Widget::new(typ)
+}
+
+fn main() {
+    Document::get().set_title("Form");
+    Document::add_css_link("https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css");
+    Document::add_css_link("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
+
+    let form = w(Form);
+    form.set_class_name("box");
+    form.append(&{
+        let div = w(Div);
+        div.set_class_name("field");
+        div.append(&{
+            let label = w(Label);
+            label.set_class_name("label");
+            label.set_inner_html(r#"<span class='fa fa-envelope'></span> Email"#);
+            label
+        });
+        div.append(&{
+            let div = w(Div);
+            div.set_class_name("control");
+            div.append(&{
+                let inp = w(Input);
+                inp.set_class_name("input");
+                inp.set_attribute("type", "email").unwrap();
+                inp.set_attribute("placeholder", "m@gmail.com").unwrap();
+                inp
+            });
+            div
+        });
+        div
+    });
+}
+```
