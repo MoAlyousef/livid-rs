@@ -4,6 +4,9 @@ use crate::types::{get_element_str, WidgetType};
 use std::ops::{Deref, DerefMut};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
+use std::mem::ManuallyDrop;
+use std::rc::Rc;
+use std::cell::RefCell;
 
 /// Get the global window
 fn window() -> web_sys::Window {
@@ -44,10 +47,11 @@ impl Document {
     }
 }
 
+#[derive(Clone)]
 /// An Html Element wrapper
-#[derive(Debug, Clone)]
 pub struct Widget {
     elem: web_sys::Element,
+    events: Rc<RefCell<Vec<ManuallyDrop<Closure<dyn FnMut()>>>>>,
 }
 
 impl Widget {
@@ -57,16 +61,24 @@ impl Widget {
         let doc = Document::get();
         let elem = doc.create_element(typ).unwrap();
         doc.body().unwrap().append_child(&elem).unwrap();
-        Self { elem }
+        Self { elem, events: Rc::from(RefCell::from(vec![])) }
+    }
+    /// Delete a widget
+    pub fn delete(w: Widget) {
+        for mut ev in w.events.borrow_mut().drain(..) {
+            unsafe { ManuallyDrop::drop(&mut ev); }
+        }
+        w.elem.set_outer_html("");
+        drop(w.elem);
     }
     /// Create a new widget from an existing Element
     pub fn from_elem(elem: web_sys::Element) -> Self {
-        Self { elem }
+        Self { elem, events: Rc::from(RefCell::from(vec![])) }
     }
     /// Create a widget struct from an id
     pub fn from_id(id: &str) -> Option<Self> {
         if let Some(elem) = Document::get().get_element_by_id(id) {
-            Some(Self { elem })
+            Some(Self { elem, events: Rc::from(RefCell::from(vec![])) })
         } else {
             None
         }
@@ -81,7 +93,7 @@ impl Widget {
         self.elem
             .add_event_listener_with_callback(event, cb1.as_ref().unchecked_ref())
             .unwrap();
-        cb1.forget();
+        self.events.borrow_mut().push(ManuallyDrop::new(cb1));
     }
     /// Set a specific style
     pub fn set_style(&self, style: Style, val: &str) {
