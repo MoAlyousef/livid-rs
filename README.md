@@ -1,13 +1,18 @@
 # livid
 
-livid is a lightweight frontend Rust crate for creating web apps via webassembly. It's a thin wrapper around web-sys and also light on macros!
+livid is a lightweight frontend Rust crate for creating web apps via webassembly. 
+- Thin wrapper around web-sys
+- No vdom.
+- No macros!
 
 ## Requirements
 - The wasm32-unknown-unknown target:
+
 `rustup target add wasm32-unknown-unknown`
 
 ## Usage
 - Install the dister crate (to simplify building and bundling your web app):
+
 `cargo install dister`
 
 * You can add links to CSS files/urls, and use Widget::set_class_name() to benefit from CSS styling.
@@ -69,6 +74,7 @@ fn main() {
 ```
 
 - Build and serve using dister:
+
 `dister build` or `dister serve`
 
 ## Example with CSS
@@ -113,3 +119,53 @@ fn main() {
 ```
 
 ![image](https://user-images.githubusercontent.com/37966791/161538847-9a5b564e-90a9-4555-bd9e-37946cad379f.png)
+
+## Usage without dister:
+- Install wasm-bindgen-cli:
+
+`cargo install wasm-bindgen-cli`
+
+- Create a project:
+```toml
+[project]
+name = "myapp"
+
+[dependencies]
+livid = "0.1"
+```
+
+```rust
+// as above
+```
+
+- Create a dist/index.html file:
+```html
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <script src="./myapp.js"></script>
+    <script type="module">
+      import init from "./myapp.js";
+      init();
+    </script>
+  </body>
+</html>
+```
+
+- Build your project with cargo:
+
+`cargo build --release --target wasm32-unknown-unknown`
+
+- Run wasm-bindgen on your generated wasm file
+
+`wasm-bindgen target/wasm32-unknown-unknown/debug/myapp.wasm --out-dir dist --weak-refs`
+
+This will generate several js glue code inside a `dist` directory, allowing the loading of your wasm binary.
+
+- Serve your index.html using a server of your choosing:
+
+`python3 -m http.server --dir dist`
