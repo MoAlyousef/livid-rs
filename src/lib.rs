@@ -9,8 +9,8 @@ livid is a lightweight frontend Rust crate for creating web apps via webassembly
 `rustup target add wasm32-unknown-unknown`
 
 ## Usage
-- Install the trunk crate (to simplify building and bundling your web app):
-`cargo install trunk`
+- Install the dister crate (to simplify building and bundling your web app):
+`cargo install dister`
 
 - Create an index.html file in your root directory:
 ```html
@@ -78,8 +78,8 @@ fn main() {
 }
 ```
 
-- Build and serve using Trunk:
-`trunk build` or `trunk serve`
+- Build and serve using dister:
+`dister build` or `dister serve`
 
 ## Example with CSS
 ```rust,no_run

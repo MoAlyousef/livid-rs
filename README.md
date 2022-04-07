@@ -7,19 +7,9 @@ livid is a lightweight frontend Rust crate for creating web apps via webassembly
 `rustup target add wasm32-unknown-unknown`
 
 ## Usage
-- Install the trunk crate (to simplify building and bundling your web app):
-`cargo install trunk`
+- Install the dister crate (to simplify building and bundling your web app):
+`cargo install dister`
 
-- Create an index.html file in your root directory:
-```html
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-</html>
-```
 * You can add links to CSS files/urls, and use Widget::set_class_name() to benefit from CSS styling.
 
 - Create a project:
@@ -78,8 +68,8 @@ fn main() {
 }
 ```
 
-- Build and serve using Trunk:
-`trunk build` or `trunk serve`
+- Build and serve using dister:
+`dister build` or `dister serve`
 
 ## Example with CSS
 ```rust
