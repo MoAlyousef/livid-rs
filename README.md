@@ -162,7 +162,9 @@ livid = "0.1"
 
 - Run wasm-bindgen on your generated wasm file
 
-`wasm-bindgen target/wasm32-unknown-unknown/debug/myapp.wasm --out-dir dist --weak-refs`
+`wasm-bindgen target/wasm32-unknown-unknown/debug/myapp.wasm --out-dir dist --no-typescript --weak-refs`
+
+Notice that the argument weak-refs is passed to wasm-bindgen to enable callback cleanup from the JS side. 
 
 This will generate several js glue code inside a `dist` directory, allowing the loading of your wasm binary.
 
