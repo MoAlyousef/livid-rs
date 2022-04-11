@@ -1,4 +1,4 @@
-use livid::{Document, Event, Style, Widget, WidgetType, IsElementIterable};
+use livid::{prelude::*, widget::Widget, enums::*};
 
 fn div() -> Widget {
     Widget::new(WidgetType::Div)

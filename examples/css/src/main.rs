@@ -1,6 +1,7 @@
 use livid::{
-    Document, Widget,
-    WidgetType::{self, *},
+    enums::WidgetType::{self, *},
+    prelude::*,
+    widget::Widget,
 };
 
 fn w(typ: WidgetType) -> Widget {

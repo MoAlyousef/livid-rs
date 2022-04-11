@@ -1,4 +1,4 @@
-use livid::{Style, Widget, WidgetType};
+use livid::{widget::Widget, enums::*};
 
 fn ul() -> Widget {
     Widget::new(WidgetType::Ul)

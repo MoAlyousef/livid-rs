@@ -20,13 +20,13 @@ livid is a lightweight frontend Rust crate for creating web apps via webassembly
 - Create a project:
 ```toml
 [dependencies]
-livid = "0.1"
+livid = "0.2"
 ```
 
 In your Rust source file:
 
 ```rust
-use livid::{Document, Event, Style, Widget, WidgetType, IsElementIterable};
+use livid::{prelude::*, widget::Widget, enums::*};
 
 fn div() -> Widget {
     Widget::new(WidgetType::Div)
@@ -64,12 +64,6 @@ fn main() {
     result.set_id("result");
     result.set_text_content(Some("0"));
     result.set_style(Style::FontSize, "22px");
-
-    let btns = Document::get().get_elements_by_tag_name("BUTTON");
-    for btn in btns.iter() {
-        // set their fontSize to 22 pixesl
-        btn.set_style(Style::FontSize, "22px");
-    }
 }
 ```
 
@@ -77,9 +71,55 @@ fn main() {
 
 `dister build` or `dister serve`
 
+Livid also a higher level widgets api:
+```rust
+use livid::{enums::*, prelude::*, *};
+
+const RED: Color = Color(255, 0, 0);
+const GREEN: Color = Color(0, 255, 0);
+
+enum Action {
+    Increment(i32),
+    Decrement(i32),
+}
+
+fn btn(action: Action) -> button::Button {
+    let (label, color, step) = {
+        match action {
+            Action::Increment(v) => ("Increment", GREEN, v),
+            Action::Decrement(v) => ("Decrement", RED, v * -1),
+        }
+    };
+    let btn = button::Button::default().with_label(label);
+    btn.set_label_color(color);
+    btn.add_callback(Event::Click, move |_| {
+        let frame = widget::Widget::from_id("result").unwrap();
+        let mut old: i32 = frame.text_content().unwrap().parse().unwrap();
+        old += step;
+        frame.set_text_content(Some(&old.to_string()));
+    });
+    btn
+}
+
+fn main() {
+    let win = window::Window::new(0, 0, 600, 500, None);
+    win.set_color(Color(240, 240, 240));
+    let col = group::Column::default();
+    btn(Action::Increment(1));
+    frame::Frame::default().with_label("0").with_id("result");
+    btn(Action::Decrement(1));
+    col.end();
+    win.end();
+}
+```
+
 ## Example with CSS
 ```rust
-use livid::{Document, Widget, WidgetType::{self, *}};
+use livid::{
+    enums::WidgetType::{self, *},
+    prelude::*,
+    widget::Widget,
+};
 
 fn w(typ: WidgetType) -> Widget {
     Widget::new(typ)

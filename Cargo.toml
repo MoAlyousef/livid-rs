@@ -1,6 +1,6 @@
 [package]
 name = "livid"
-version = "0.1.4"
+version = "0.2.0"
 edition = "2021"
 description = "livid is a lightweight frontend Rust crate for creating web apps via webassembly"
 license = "MIT"
@@ -12,8 +12,8 @@ categories = ["wasm", "web-programming"]
 
 [dependencies]
 web-sys = { version = "0.3", features= [
-        "Element", "EventTarget", "HtmlElement", 
+        "Element", "Event", "EventTarget", "HtmlElement", 
         "HtmlStyleElement", "Node", "HtmlBodyElement", 
         "Window", "Document", "CssStyleDeclaration", "HtmlCollection",
-        "HtmlHeadElement", "HtmlLinkElement", "console"] }
+        "HtmlHeadElement", "HtmlLinkElement", "console", "HtmlInputElement"] }
 wasm-bindgen = "0.2"

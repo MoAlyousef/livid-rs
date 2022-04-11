@@ -1,37 +1,33 @@
 /*!
-
 # livid
 
-livid is a lightweight frontend Rust crate for creating web apps via webassembly. It's a thin wrapper around web-sys and also light on macros!
+livid is a lightweight frontend Rust crate for creating web apps via webassembly. 
+- Thin wrapper around web-sys
+- No vdom.
+- No macros!
 
 ## Requirements
 - The wasm32-unknown-unknown target:
+
 `rustup target add wasm32-unknown-unknown`
 
 ## Usage
 - Install the dister crate (to simplify building and bundling your web app):
+
 `cargo install dister`
 
-- Create an index.html file in your root directory:
-```html
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-</html>
-```
 * You can add links to CSS files/urls, and use Widget::set_class_name() to benefit from CSS styling.
 
 - Create a project:
 ```toml
 [dependencies]
-livid = "0.1"
+livid = "0.2"
 ```
 
+In your Rust source file:
+
 ```rust,no_run
-use livid::{Document, Event, Style, Widget, WidgetType, IsElementIterable};
+use livid::{prelude::*, widget::Widget, enums::*};
 
 fn div() -> Widget {
     Widget::new(WidgetType::Div)
@@ -69,21 +65,62 @@ fn main() {
     result.set_id("result");
     result.set_text_content(Some("0"));
     result.set_style(Style::FontSize, "22px");
-
-    let btns = Document::get().get_elements_by_tag_name("BUTTON");
-    for btn in btns.iter() {
-        // set their fontSize to 22 pixesl
-        btn.set_style(Style::FontSize, "22px");
-    }
 }
 ```
 
 - Build and serve using dister:
+
 `dister build` or `dister serve`
+
+Livid also a higher level widgets api:
+```rust,no_run
+use livid::{enums::*, prelude::*, *};
+
+const RED: Color = Color(255, 0, 0);
+const GREEN: Color = Color(0, 255, 0);
+
+enum Action {
+    Increment(i32),
+    Decrement(i32),
+}
+
+fn btn(action: Action) -> button::Button {
+    let (label, color, step) = {
+        match action {
+            Action::Increment(v) => ("Increment", GREEN, v),
+            Action::Decrement(v) => ("Decrement", RED, v * -1),
+        }
+    };
+    let btn = button::Button::default().with_label(label);
+    btn.set_label_color(color);
+    btn.add_callback(Event::Click, move |_| {
+        let frame = widget::Widget::from_id("result").unwrap();
+        let mut old: i32 = frame.text_content().unwrap().parse().unwrap();
+        old += step;
+        frame.set_text_content(Some(&old.to_string()));
+    });
+    btn
+}
+
+fn main() {
+    let win = window::Window::new(0, 0, 600, 500, None);
+    win.set_color(Color(240, 240, 240));
+    let col = group::Column::default();
+    btn(Action::Increment(1));
+    frame::Frame::default().with_label("0").with_id("result");
+    btn(Action::Decrement(1));
+    col.end();
+    win.end();
+}
+```
 
 ## Example with CSS
 ```rust,no_run
-use livid::{Document, Widget, WidgetType::{self, *}};
+use livid::{
+    enums::WidgetType::{self, *},
+    prelude::*,
+    widget::Widget,
+};
 
 fn w(typ: WidgetType) -> Widget {
     Widget::new(typ)
@@ -121,15 +158,71 @@ fn main() {
     });
 }
 ```
+
+![image](https://user-images.githubusercontent.com/37966791/161538847-9a5b564e-90a9-4555-bd9e-37946cad379f.png)
+
+## Usage without dister:
+- Install wasm-bindgen-cli:
+
+`cargo install wasm-bindgen-cli`
+
+- Create a project:
+```toml
+[project]
+name = "myapp"
+
+[dependencies]
+livid = "0.1"
+```
+
+```rust,no_run
+use livid::{enums::*, prelude::*, *};
+// as above
+```
+
+- Create a dist/index.html file:
+```html
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <script src="./myapp.js"></script>
+    <script type="module">
+      import init from "./myapp.js";
+      init();
+    </script>
+  </body>
+</html>
+```
+
+- Build your project with cargo:
+
+`cargo build --release --target wasm32-unknown-unknown`
+
+- Run wasm-bindgen on your generated wasm file
+
+`wasm-bindgen target/wasm32-unknown-unknown/debug/myapp.wasm --out-dir dist --no-typescript --weak-refs`
+
+Notice that the argument weak-refs is passed to wasm-bindgen to enable callback cleanup from the JS side. 
+
+This will generate several js glue code inside a `dist` directory, allowing the loading of your wasm binary.
+
+- Serve your index.html using a server of your choosing:
+
+`python3 -m http.server --dir dist`
 */
 
-mod types;
-pub use types::WidgetType;
-mod events;
-pub use events::Event;
-mod styles;
-pub use styles::Style;
-mod widget;
-pub use widget::{Document, Widget, IsElementIterable};
-mod console;
-pub use console::Console;
+
+pub mod widget;
+pub mod console;
+pub mod button;
+pub mod prelude;
+pub mod utils;
+pub mod group;
+pub mod input;
+pub mod window;
+pub mod frame;
+pub mod enums;

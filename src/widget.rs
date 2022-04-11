@@ -1,49 +1,7 @@
-use crate::events::{get_event_str, Event};
-use crate::styles::{get_style_str, Style};
-use crate::types::{get_element_str, WidgetType};
+use crate::{prelude::{Document}, enums::*};
 use std::ops::{Deref, DerefMut};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-
-/// Get the global window
-fn window() -> web_sys::Window {
-    web_sys::window().expect("No global window found!")
-}
-
-/// Get the global document
-fn document() -> web_sys::Document {
-    window().document().expect("No document found!")
-}
-
-#[derive(Clone, Copy)]
-pub struct Document;
-
-impl Document {
-    /// Get the global document
-    pub fn get() -> web_sys::Document {
-        document()
-    }
-
-    /// Get the global docuement's body
-    pub fn body() -> web_sys::HtmlElement {
-        Self::get().body().expect("No body found!")
-    }
-
-    /// Get the head
-    pub fn head() -> web_sys::HtmlHeadElement {
-        Self::get().head().expect("No head element found!")
-    }
-
-    /// add a link
-    pub fn add_css_link(href: &str) {
-        let link: web_sys::HtmlLinkElement =
-            JsValue::from(Document::get().create_element("link").unwrap()).into();
-        link.set_rel("stylesheet");
-        link.set_type("text/css");
-        link.set_href(href);
-        Self::head().append_child(&link).unwrap();
-    }
-}
 
 #[derive(Clone)]
 /// An Html Element wrapper
@@ -54,9 +12,8 @@ pub struct Widget {
 impl Widget {
     /// Create a new Widget
     pub fn new(typ: WidgetType) -> Self {
-        let typ = get_element_str(typ);
         let doc = Document::get();
-        let elem = doc.create_element(typ).unwrap();
+        let elem = doc.create_element(typ.to_str()).unwrap();
         doc.body().unwrap().append_child(&elem).unwrap();
         Self { elem }
     }
@@ -83,25 +40,22 @@ impl Widget {
         let cb1 = Closure::wrap(Box::new(move || {
             cb(&e);
         }) as Box<dyn FnMut()>);
-        let event = get_event_str(event);
         self.elem
-            .add_event_listener_with_callback(event, cb1.as_ref().unchecked_ref())
+            .add_event_listener_with_callback(event.to_str(), cb1.as_ref().unchecked_ref())
             .unwrap();
         cb1.forget();
     }
     /// Set a specific style
     pub fn set_style(&self, style: Style, val: &str) {
-        let style = get_style_str(style);
         let style_elem: web_sys::HtmlStyleElement = JsValue::from(self.elem.clone()).into();
         let css = style_elem.style();
-        css.set_property(style, val).unwrap();
+        css.set_property(style.to_str(), val).unwrap();
     }
     /// Get a specific style
     pub fn style(&self, s: Style) -> String {
-        let style = get_style_str(s);
         let style_elem: web_sys::HtmlStyleElement = JsValue::from(self.elem.clone()).into();
         let css = style_elem.style();
-        css.get_property_value(style).unwrap()
+        css.get_property_value(s.to_str()).unwrap()
     }
     /// Append a widget
     pub fn append(&self, other: &Widget) {
@@ -124,37 +78,5 @@ impl Deref for Widget {
 impl DerefMut for Widget {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.elem
-    }
-}
-
-#[derive(Debug)]
-pub struct ElementIter {
-    list: web_sys::HtmlCollection,
-    index: u32
-}
-
-
-pub trait IsElementIterable {
-    fn iter(&self) -> ElementIter;
-}
-
-impl IsElementIterable for web_sys::HtmlCollection {
-    fn iter(&self) -> ElementIter {
-        ElementIter {
-            list: self.clone(),
-            index: 0
-        }
-    }
-}
-
-impl Iterator for ElementIter {
-    type Item = Widget;
-    fn next( &mut self ) -> Option< Self::Item > {
-        if let Some(item) = self.list.item(self.index) {
-            self.index += 1;
-            Some(Widget::from_elem(item))
-        } else {
-            None
-        }
     }
 }
