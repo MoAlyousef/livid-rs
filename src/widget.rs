@@ -13,7 +13,7 @@ impl Widget {
     /// Create a new Widget
     pub fn new(typ: WidgetType) -> Self {
         let doc = Document::get();
-        let elem = doc.create_element(typ.to_str()).unwrap();
+        let elem = doc.create_element(&typ.to_str()).unwrap();
         doc.body().unwrap().append_child(&elem).unwrap();
         Self { elem }
     }
@@ -41,7 +41,7 @@ impl Widget {
             cb(&e);
         }) as Box<dyn FnMut()>);
         self.elem
-            .add_event_listener_with_callback(event.to_str(), cb1.as_ref().unchecked_ref())
+            .add_event_listener_with_callback(&event.to_str(), cb1.as_ref().unchecked_ref())
             .unwrap();
         cb1.forget();
     }

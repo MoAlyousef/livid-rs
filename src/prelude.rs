@@ -344,7 +344,7 @@ pub trait WidgetExt: WidgetBase {
     /// do callback
     fn do_callback(&self, event: Event) {
         let elem: web_sys::EventTarget = JsValue::from((*self.inner()).clone()).into();
-        elem.dispatch_event(&web_sys::Event::new(event.to_str()).unwrap())
+        elem.dispatch_event(&web_sys::Event::new(&event.to_str()).unwrap())
             .unwrap();
     }
 }
@@ -372,5 +372,15 @@ pub trait InputExt: WidgetExt {
     fn value(&self) -> String {
         let elem: web_sys::HtmlInputElement = JsValue::from((*self.inner()).clone()).into();
         elem.value()
+    }
+    fn set_value(&self, s: &str) {
+        let elem: web_sys::HtmlInputElement = JsValue::from((*self.inner()).clone()).into();
+        elem.set_value(s);
+    }
+    fn set_text_align(&self, align: TextAlign) {
+        self.inner().set_style(Style::TextAlign, &align.to_str());
+    }
+    fn set_direction(&self, dir: Direction) {
+        self.inner().set_style(Style::Direction, &dir.to_str());
     }
 }
