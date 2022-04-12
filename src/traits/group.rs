@@ -3,14 +3,10 @@ use crate::traits::WidgetExt;
 
 pub trait GroupExt: WidgetExt {
     fn begin(&self) {
-        unsafe {
-            PARENTS.push(self.inner());
-        }
+        PARENTS.with(|p| p.borrow_mut().push(self.inner()));
     }
     fn end(&self) {
-        unsafe {
-            PARENTS.pop();
-        }
+        PARENTS.with(|p| p.borrow_mut().pop());
     }
     fn add<W: WidgetExt>(&self, widget: &W) {
         self.inner().append(&widget.inner());

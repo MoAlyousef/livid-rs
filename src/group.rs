@@ -1,8 +1,11 @@
 use crate::{enums::*, widget::Widget};
+use std::cell::RefCell;
 
 use crate::prelude::{GroupExt, WidgetBase, WidgetExt};
 
-pub(crate) static mut PARENTS: Vec<Widget> = vec![];
+thread_local! {
+    pub(crate) static PARENTS: RefCell<Vec<Widget>> = RefCell::from(vec![]);
+}
 
 pub struct Group {
     inner: Widget,
@@ -11,12 +14,12 @@ pub struct Group {
 impl WidgetBase for Group {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Div);
-        unsafe {
-            if let Some(last) = PARENTS.last() {
+        PARENTS.with(|p| {
+            if let Some(last) = p.borrow().last() {
                 last.append(&inner);
             }
-            PARENTS.push(inner.clone());
-        }
+            p.borrow_mut().push(inner.clone());
+        });
         Self { inner }
     }
     fn default_fill() -> Self {
@@ -50,12 +53,12 @@ impl WidgetBase for Column {
         inner.set_style(Style::Display, "flex");
         inner.set_style(Style::FlexDirection, "column");
         inner.set_style(Style::AlignContent, "space-between");
-        unsafe {
-            if let Some(last) = PARENTS.last() {
+        PARENTS.with(|p| {
+            if let Some(last) = p.borrow().last() {
                 last.append(&inner);
             }
-            PARENTS.push(inner.clone());
-        }
+            p.borrow_mut().push(inner.clone());
+        });
         Self { inner }
     }
     fn default_fill() -> Self {
@@ -89,12 +92,12 @@ impl WidgetBase for Row {
         inner.set_style(Style::Display, "flex");
         inner.set_style(Style::FlexDirection, "row");
         inner.set_style(Style::AlignContent, "space-between");
-        unsafe {
-            if let Some(last) = PARENTS.last() {
+        PARENTS.with(|p| {
+            if let Some(last) = p.borrow().last() {
                 last.append(&inner);
             }
-            PARENTS.push(inner.clone());
-        }
+            p.borrow_mut().push(inner.clone());
+        });
         Self { inner }
     }
     fn default_fill() -> Self {

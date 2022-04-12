@@ -12,11 +12,11 @@ impl WidgetBase for Frame {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Div);
         inner.set_style(Style::TextAlign, "center");
-        unsafe {
-            if let Some(last) = PARENTS.last() {
+        PARENTS.with(|p| {
+            if let Some(last) = p.borrow().last() {
                 last.append(&inner);
             }
-        }
+        });
         Self { inner }
     }
     fn default_fill() -> Self {

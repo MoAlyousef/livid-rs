@@ -11,11 +11,11 @@ pub struct Input {
 impl WidgetBase for Input {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Input);
-        unsafe {
-            if let Some(last) = PARENTS.last() {
+        PARENTS.with(|p| {
+            if let Some(last) = p.borrow().last() {
                 last.append(&inner);
             }
-        }
+        });
         Self { inner }
     }
     fn default_fill() -> Self {

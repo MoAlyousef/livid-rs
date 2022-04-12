@@ -1,10 +1,11 @@
-use crate::{enums::*, widget::Widget};
-
 use crate::document::Document;
 use crate::group::PARENTS;
 use crate::prelude::{GroupExt, WidgetBase, WidgetExt};
+use crate::{enums::*, widget::Widget};
+use std::sync::atomic::{AtomicBool, Ordering};
 
-pub(crate) static mut HAS_WINDOW: bool = false;
+pub(crate) static HAS_WINDOW: AtomicBool = AtomicBool::new(false);
+
 pub struct Window {
     inner: Widget,
 }
@@ -35,13 +36,13 @@ impl WidgetBase for Window {
         middle.append(&inner);
         inner.set_style(Style::MarginLeft, "auto");
         inner.set_style(Style::MarginRight, "auto");
-        unsafe {
-            if let Some(last) = PARENTS.last() {
+        PARENTS.with(|p| {
+            if let Some(last) = p.borrow().last() {
                 last.append(&inner);
             }
-            PARENTS.push(inner.clone());
-            HAS_WINDOW = true;
-        }
+            p.borrow_mut().push(inner.clone());
+        });
+        HAS_WINDOW.store(true, Ordering::Relaxed);
         Self { inner }
     }
     fn default_fill() -> Self {

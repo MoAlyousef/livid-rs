@@ -11,11 +11,11 @@ pub struct Button {
 impl WidgetBase for Button {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Button);
-        unsafe {
-            if let Some(last) = PARENTS.last() {
+        PARENTS.with(|p| {
+            if let Some(last) = p.borrow().last() {
                 last.append(&inner);
             }
-        }
+        });
         Self { inner }
     }
     fn default_fill() -> Self {
