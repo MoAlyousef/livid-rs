@@ -1,15 +1,24 @@
 use crate::group::PARENTS;
-use crate::prelude::{InputExt, WidgetBase, WidgetExt};
+use crate::prelude::*;
 use crate::{enums::*, widget::Widget};
 
 #[derive(Clone)]
-pub struct Input {
+pub struct Choice {
     inner: Widget,
 }
 
-impl WidgetBase for Input {
+impl Choice {
+    pub fn add_choice(&self, choice: &str) {
+        let opt = Widget::new(WidgetType::Option);
+        opt.set_text_content(Some(choice));
+        self.inner.append(&opt);
+    }
+}
+
+impl WidgetBase for Choice {
     fn default() -> Self {
-        let inner = Widget::new(WidgetType::Input);
+        let inner = Widget::new(WidgetType::Select);
+        inner.set_style(Style::TextAlign, "center");
         PARENTS.with(|p| {
             if let Some(last) = p.borrow().last() {
                 last.append(&inner);
@@ -33,19 +42,34 @@ impl WidgetBase for Input {
     }
 }
 
-impl WidgetExt for Input {}
-
-impl InputExt for Input {}
+impl WidgetExt for Choice {}
 
 #[derive(Clone)]
-pub struct TextArea {
+pub struct NavBar {
     inner: Widget,
 }
 
-impl WidgetBase for TextArea {
+impl NavBar {
+    pub fn add_choice(&self, choice: &str) -> crate::misc::Link {
+        let opt = Widget::new(WidgetType::Li);
+        opt.set_style(Style::Display, "block");
+        opt.set_style(Style::Padding, "8px 16px");
+        opt.set_style(Style::TextDecoration, "none");
+        let link = Widget::new(WidgetType::A);
+        link.set_text_content(Some(choice));
+        opt.append(&link);
+        self.inner.append(&opt);
+        unsafe { crate::misc::Link::from_widget(&link) }
+    }
+}
+
+impl WidgetBase for NavBar {
     fn default() -> Self {
-        let inner = Widget::new(WidgetType::Textarea);
-        inner.set_style(Style::Resize, "none");
+        let inner = Widget::new(WidgetType::Ul);
+        inner.set_style(Style::ListStyleType, "none");
+        inner.set_style(Style::Margin, "0");
+        inner.set_style(Style::Padding, "0");
+        inner.set_style(Style::Width, "200px");
         PARENTS.with(|p| {
             if let Some(last) = p.borrow().last() {
                 last.append(&inner);
@@ -69,6 +93,4 @@ impl WidgetBase for TextArea {
     }
 }
 
-impl WidgetExt for TextArea {}
-
-impl InputExt for TextArea {}
+impl WidgetExt for NavBar {}

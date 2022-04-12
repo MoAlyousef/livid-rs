@@ -16,5 +16,5 @@ web-sys = { version = "0.3", features= [
         "HtmlStyleElement", "Node", "HtmlBodyElement", 
         "Window", "Document", "CssStyleDeclaration", "HtmlCollection",
         "HtmlHeadElement", "HtmlLinkElement", "console", "HtmlInputElement",
-        "HtmlButtonElement" ] }
+        "HtmlButtonElement", "HtmlImageElement" ] }
 wasm-bindgen = "0.2"

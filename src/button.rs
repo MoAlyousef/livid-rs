@@ -1,7 +1,6 @@
-use crate::{enums::*, widget::Widget};
-
 use crate::group::PARENTS;
 use crate::prelude::{WidgetBase, WidgetExt};
+use crate::{enums::*, widget::Widget};
 use wasm_bindgen::JsValue;
 
 #[derive(Clone)]

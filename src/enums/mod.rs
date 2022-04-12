@@ -47,7 +47,7 @@ pub enum AlignContent {
     SpaceBetween,
     SpaceAround,
     Initial,
-    Inherit
+    Inherit,
 }
 
 impl AlignContent {
