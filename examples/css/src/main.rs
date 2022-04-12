@@ -1,6 +1,6 @@
 use livid::{
+    document::Document,
     enums::WidgetType::{self, *},
-    prelude::*,
     widget::Widget,
 };
 

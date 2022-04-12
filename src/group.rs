@@ -1,6 +1,6 @@
 use crate::{enums::*, widget::Widget};
 
-use crate::prelude::{WidgetBase, WidgetExt, GroupExt};
+use crate::prelude::{GroupExt, WidgetBase, WidgetExt};
 
 pub(crate) static mut PARENTS: Vec<Widget> = vec![];
 
@@ -18,7 +18,7 @@ impl WidgetBase for Group {
             PARENTS.push(inner.clone());
         }
         Self { inner }
-    }    
+    }
     fn default_fill() -> Self {
         let s = Self::default();
         s.inner.set_style(Style::Width, "100%");
@@ -26,7 +26,9 @@ impl WidgetBase for Group {
         s
     }
     unsafe fn from_widget(widget: &Widget) -> Self {
-        Self { inner: widget.clone() }
+        Self {
+            inner: widget.clone(),
+        }
     }
     fn inner(&self) -> Widget {
         self.inner.clone()
@@ -36,7 +38,6 @@ impl WidgetBase for Group {
 impl WidgetExt for Group {}
 
 impl GroupExt for Group {}
-
 
 pub struct Column {
     inner: Widget,
@@ -56,7 +57,7 @@ impl WidgetBase for Column {
             PARENTS.push(inner.clone());
         }
         Self { inner }
-    }    
+    }
     fn default_fill() -> Self {
         let s = Self::default();
         s.inner.set_style(Style::Width, "100%");
@@ -64,7 +65,9 @@ impl WidgetBase for Column {
         s
     }
     unsafe fn from_widget(widget: &Widget) -> Self {
-        Self { inner: widget.clone() }
+        Self {
+            inner: widget.clone(),
+        }
     }
     fn inner(&self) -> Widget {
         self.inner.clone()
@@ -93,7 +96,7 @@ impl WidgetBase for Row {
             PARENTS.push(inner.clone());
         }
         Self { inner }
-    }    
+    }
     fn default_fill() -> Self {
         let s = Self::default();
         s.inner.set_style(Style::Width, "100%");
@@ -101,7 +104,9 @@ impl WidgetBase for Row {
         s
     }
     unsafe fn from_widget(widget: &Widget) -> Self {
-        Self { inner: widget.clone() }
+        Self {
+            inner: widget.clone(),
+        }
     }
     fn inner(&self) -> Widget {
         self.inner.clone()

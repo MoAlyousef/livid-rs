@@ -1,7 +1,8 @@
-use crate::{widget::Widget, enums::*};
+use crate::{enums::*, widget::Widget};
 
-use crate::prelude::{Document, WidgetBase, WidgetExt, GroupExt};
+use crate::document::Document;
 use crate::group::PARENTS;
+use crate::prelude::{GroupExt, WidgetBase, WidgetExt};
 
 pub(crate) static mut HAS_WINDOW: bool = false;
 pub struct Window {
@@ -49,13 +50,7 @@ impl WidgetBase for Window {
         s.inner.set_style(Style::Height, "100%");
         s
     }
-    fn new<T: Into<Option<&'static str>>>(
-        _x: i32,
-        _y: i32,
-        w: i32,
-        h: i32,
-        title: T,
-    ) -> Self {
+    fn new<T: Into<Option<&'static str>>>(_x: i32, _y: i32, w: i32, h: i32, title: T) -> Self {
         if let Some(title) = title.into() {
             Document::get().set_title(title);
         }
@@ -65,7 +60,9 @@ impl WidgetBase for Window {
         s
     }
     unsafe fn from_widget(widget: &Widget) -> Self {
-        Self { inner: widget.clone() }
+        Self {
+            inner: widget.clone(),
+        }
     }
     fn inner(&self) -> Widget {
         self.inner.clone()

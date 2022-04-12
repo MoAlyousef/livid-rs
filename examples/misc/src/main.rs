@@ -32,19 +32,19 @@ fn td() -> Widget {
     Widget::new(WidgetType::Td)
 }
 
-fn create_table(data: &Vec<Vec<i32>>) -> Widget {
+fn create_table(data: &[Vec<i32>]) -> Widget {
     let t = table();
     t.set_attribute("border", "1").unwrap();
     let tb = tbody();
     t.append(&tb);
-    for i in 0..data.len() {
+    for item in data.iter() {
         let tr = tr();
         tb.append(&tr);
 
-        for j in 0..data[i].len() {
+        for sub in item.iter() {
             let td = td();
             td.set_attribute("width", "100").unwrap();
-            td.set_text_content(Some(&data[i][j].to_string()));
+            td.set_text_content(Some(&sub.to_string()));
             tr.append(&td);
         }
     }

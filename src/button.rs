@@ -1,8 +1,7 @@
-
 use crate::{enums::*, widget::Widget};
 
-use crate::prelude::{WidgetBase, WidgetExt};
 use crate::group::PARENTS;
+use crate::prelude::{WidgetBase, WidgetExt};
 
 #[derive(Clone)]
 pub struct Button {
@@ -26,7 +25,9 @@ impl WidgetBase for Button {
         s
     }
     unsafe fn from_widget(widget: &Widget) -> Self {
-        Self { inner: widget.clone() }
+        Self {
+            inner: widget.clone(),
+        }
     }
     fn inner(&self) -> Widget {
         self.inner.clone()

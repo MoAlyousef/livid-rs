@@ -25,24 +25,24 @@ livid = "0.2"
 
 In your Rust source file:
 
-```rust
-use livid::{prelude::*, widget::Widget, enums::*};
+```rust,no_run
+use livid::{enums::*, prelude::*, *};
 
-fn div() -> Widget {
-    Widget::new(WidgetType::Div)
+fn div() -> widget::Widget {
+    widget::Widget::new(WidgetType::Div)
 }
 
-fn btn(i: i32) -> Widget {
-    let btn = Widget::new(WidgetType::Button);
+fn btn(i: i32) -> widget::Widget {
+    let btn = widget::Widget::new(WidgetType::Button);
     let (label, col) = if i > 0 {
-        ("Increment", "green")
+        ("Increment", "Green")
     } else {
-        ("Decrement", "red")
+        ("Decrement", "Red")
     };
     btn.set_text_content(Some(label));
     btn.set_style(Style::Color, col);
     btn.add_callback(Event::Click, move |_| {
-        let result = Widget::from_id("result").unwrap();
+        let result = widget::Widget::from_id("result").unwrap();
         let mut old: i32 = result.text_content().unwrap().parse().unwrap();
         old += i;
         result.set_text_content(Some(&old.to_string()));
@@ -51,7 +51,7 @@ fn btn(i: i32) -> Widget {
 }
 
 fn main() {
-    Document::get().set_title("Counter");
+    document::Document::get().set_title("Counter");
 
     let btn_inc = btn(1);
     let btn_dec = btn(-1);
@@ -64,6 +64,12 @@ fn main() {
     result.set_id("result");
     result.set_text_content(Some("0"));
     result.set_style(Style::FontSize, "22px");
+
+    let btns = document::Document::get().get_elements_by_tag_name("BUTTON");
+    for btn in btns.iter() {
+        // set their fontSize to 22 pixesl
+        btn.set_style(Style::FontSize, "22px");
+    }
 }
 ```
 
@@ -72,11 +78,8 @@ fn main() {
 `dister build` or `dister serve`
 
 Livid also a higher level widgets api:
-```rust
+```rust,no_run
 use livid::{enums::*, prelude::*, *};
-
-const RED: Color = Color(255, 0, 0);
-const GREEN: Color = Color(0, 255, 0);
 
 enum Action {
     Increment(i32),
@@ -86,12 +89,14 @@ enum Action {
 fn btn(action: Action) -> button::Button {
     let (label, color, step) = {
         match action {
-            Action::Increment(v) => ("Increment", GREEN, v),
-            Action::Decrement(v) => ("Decrement", RED, v * -1),
+            Action::Increment(v) => ("Increment", Color::Green, v),
+            Action::Decrement(v) => ("Decrement", Color::Red, -v),
         }
     };
     let btn = button::Button::default().with_label(label);
+    btn.set_label_size(20);
     btn.set_label_color(color);
+    btn.set_frame(FrameType::RFlatBox);
     btn.add_callback(Event::Click, move |_| {
         let frame = widget::Widget::from_id("result").unwrap();
         let mut old: i32 = frame.text_content().unwrap().parse().unwrap();
@@ -102,9 +107,9 @@ fn btn(action: Action) -> button::Button {
 }
 
 fn main() {
-    let win = window::Window::new(0, 0, 600, 500, None);
-    win.set_color(Color(240, 240, 240));
-    let col = group::Column::default();
+    let win = window::Window::default().with_size(400, 300);
+    win.set_color(Color::Custom((250, 250, 250)));
+    let col = group::Column::default_fill();
     btn(Action::Increment(1));
     frame::Frame::default().with_label("0").with_id("result");
     btn(Action::Decrement(1));
@@ -114,10 +119,10 @@ fn main() {
 ```
 
 ## Example with CSS
-```rust
+```rust,no_run
 use livid::{
+    document::Document,
     enums::WidgetType::{self, *},
-    prelude::*,
     widget::Widget,
 };
 
@@ -174,7 +179,7 @@ name = "myapp"
 livid = "0.1"
 ```
 
-```rust
+```rust,no_run
 // as above
 ```
 

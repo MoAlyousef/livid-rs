@@ -1,4 +1,5 @@
-use crate::{prelude::{Document}, enums::*};
+use crate::document::Document;
+use crate::enums::*;
 use std::ops::{Deref, DerefMut};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
@@ -28,11 +29,9 @@ impl Widget {
     }
     /// Create a widget struct from an id
     pub fn from_id(id: &str) -> Option<Self> {
-        if let Some(elem) = Document::get().get_element_by_id(id) {
-            Some(Self { elem })
-        } else {
-            None
-        }
+        Document::get()
+            .get_element_by_id(id)
+            .map(|elem| Self { elem })
     }
     /// Add a callback
     pub fn add_callback<F: 'static + FnMut(&Self)>(&self, event: Event, mut cb: F) {
