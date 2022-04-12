@@ -121,6 +121,18 @@ pub trait WidgetExt: WidgetBase {
         elem.dispatch_event(&web_sys::Event::new(&event.to_str()).unwrap())
             .unwrap();
     }
+    fn set_margin(&self, size: i32) {
+        self.inner().set_style(Style::Margin, &size.to_string());
+    }
+    fn margin(&self) -> i32 {
+        self.inner().style(Style::Margin).parse().unwrap()
+    }
+    fn set_padding(&self, size: i32) {
+        self.inner().set_style(Style::Padding, &size.to_string());
+    }
+    fn padding(&self) -> i32 {
+        self.inner().style(Style::Padding).parse().unwrap()
+    }
     fn set_frame(&self, frame: FrameType) {
         match frame {
             FrameType::FlatBox => {

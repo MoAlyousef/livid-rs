@@ -37,3 +37,31 @@ impl Direction {
         format!("{:?}", self).to_ascii_lowercase()
     }
 }
+
+#[derive(Debug, Copy, Clone)]
+pub enum AlignContent {
+    Stretch,
+    Center,
+    FlexStart,
+    FlexEnd,
+    SpaceBetween,
+    SpaceAround,
+    Initial,
+    Inherit
+}
+
+impl AlignContent {
+    pub fn to_str(self) -> &'static str {
+        use AlignContent::*;
+        match self {
+            Stretch => "stretch",
+            Center => "center",
+            FlexStart => "flex-start",
+            FlexEnd => "flex-end",
+            SpaceBetween => "space-between",
+            SpaceAround => "space-around",
+            Initial => "initial",
+            Inherit => "inherit",
+        }
+    }
+}
