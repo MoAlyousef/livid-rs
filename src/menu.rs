@@ -56,7 +56,18 @@ impl NavBar {
         opt.set_style(Style::Padding, "8px 16px");
         opt.set_style(Style::TextDecoration, "none");
         let link = Widget::new(WidgetType::A);
+        link.set_style(Style::Display, "block");
+        link.set_style(Style::Padding, "8px 16px");
+        link.set_style(Style::TextDecoration, "none");
         link.set_text_content(Some(choice));
+        link.add_callback(Event::MouseOver, |l| {
+            l.set_style(Style::BackgroundColor, "#555");
+            l.set_style(Style::Color, "white");
+        });
+        link.add_callback(Event::MouseLeave, |l| {
+            l.set_style(Style::BackgroundColor, "rgba(0,0,0,0)");
+            l.set_style(Style::Color, "black");
+        });
         opt.append(&link);
         self.inner.append(&opt);
         unsafe { crate::misc::Link::from_widget(&link) }
@@ -70,6 +81,7 @@ impl WidgetBase for NavBar {
         inner.set_style(Style::Margin, "0");
         inner.set_style(Style::Padding, "0");
         inner.set_style(Style::Width, "200px");
+        inner.set_style(Style::BackgroundColor, "#f1f1f1");
         PARENTS.with(|p| {
             if let Some(last) = p.borrow().last() {
                 last.append(&inner);
