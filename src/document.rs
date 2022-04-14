@@ -159,4 +159,9 @@ impl Document {
         link.set_href(href);
         Self::head().append_child(&link).unwrap();
     }
+
+    /// Check if the document has a main livid window
+    pub fn has_window() -> bool {
+        crate::window::HAS_WINDOW.load(std::sync::atomic::Ordering::Relaxed)
+    }
 }

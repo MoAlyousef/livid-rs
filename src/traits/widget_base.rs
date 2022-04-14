@@ -1,8 +1,8 @@
 use crate::{enums::*, widget::Widget};
 
 pub trait WidgetBase {
-    fn default() -> Self;
-    fn default_fill() -> Self;
+    fn default() -> Self where Self: Sized;
+    fn default_fill() -> Self where Self: Sized;
     /// Construct a new widget
     fn new<T: Into<Option<&'static str>>>(x: i32, y: i32, w: i32, h: i32, title: T) -> Self
     where
@@ -24,7 +24,7 @@ pub trait WidgetBase {
     /// Create a typed widget from `widget::Widget`
     /// # Safety
     /// The types must be compatible
-    unsafe fn from_widget(widget: &Widget) -> Self;
+    unsafe fn from_widget(widget: &Widget) -> Self where Self: Sized;
     /// inner
     fn inner(&self) -> Widget;
 }

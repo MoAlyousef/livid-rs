@@ -56,7 +56,7 @@ fn btn(action: Action) -> button::Button {
 
 fn main() {
     let win = window::Window::default().with_size(400, 300);
-    win.set_color(Color::Custom((250, 250, 250)));
+    win.set_color(Color::Rgb(Rgb(250, 250, 250)));
     let col = group::Column::default_fill();
     col.set_justify_content(AlignContent::Center);
     btn(Action::Increment(1));

@@ -5,7 +5,7 @@ use livid::{enums::*, prelude::*, *};
 pub fn main() {
     Counter::new().run(Settings {
         size: (300, 200),
-        win_color: Some(Color::Custom((250, 250, 250))),
+        win_color: Some(Color::Rgb(Rgb(250, 250, 250))),
         ..Default::default()
     })
 }

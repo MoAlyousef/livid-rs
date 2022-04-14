@@ -1,6 +1,12 @@
 use crate::prelude::{LividError, LividErrorKind};
 
 #[derive(Debug, Copy, Clone)]
+pub struct Rgb(pub u8, pub u8, pub u8);
+
+#[derive(Debug, Copy, Clone)]
+pub struct Rgba(pub u8, pub u8, pub u8, pub u8);
+
+#[derive(Debug, Copy, Clone)]
 pub enum Color {
     IndianRed,
     LightCoral,
@@ -143,12 +149,14 @@ pub enum Color {
     SlateGray,
     DarkSlateGray,
     Black,
-    Custom((u8, u8, u8)),
+    Rgb(Rgb),
+    Rgba(Rgba),
 }
 
 impl Color {
     pub fn to_str(self) -> String {
-        if let Color::Custom((r, g, b)) = self {
+        if let Color::Rgb(rgb) = self {
+            let Rgb(r, g, b) = rgb;
             format!("#{:02x}{:02x}{:02x}", r, g, b)
         } else {
             format!("{:?}", self)
@@ -164,6 +172,6 @@ impl Color {
     }
     pub fn from_hex(val: u32) -> Color {
         let (r, g, b) = crate::utils::hex2rgb(val);
-        Color::Custom((r, g, b))
+        Color::Rgb(Rgb(r, g, b))
     }
 }

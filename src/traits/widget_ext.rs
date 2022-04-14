@@ -1,4 +1,4 @@
-use crate::{enums::*, traits::WidgetBase};
+use crate::{enums::*, traits::{WidgetBase, GroupExt}};
 use wasm_bindgen::prelude::*;
 
 /// Defines the methods implemented by all widgets
@@ -156,6 +156,15 @@ pub trait WidgetExt: WidgetBase {
             FrameType::RoundFrame => {
                 self.inner().set_style(Style::BorderRadius, "50%");
             }
+        }
+    }
+    fn parent(&self) -> Option<Box<dyn GroupExt>> {
+        if let Some(parent) = self.inner().parent_element() {
+            Some(Box::new(unsafe { 
+                crate::group::Group::from_widget(&crate::widget::Widget::from_elem(parent))
+            }))
+        } else {
+            None
         }
     }
 }

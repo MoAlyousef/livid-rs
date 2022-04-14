@@ -4,7 +4,7 @@ use std::cell::RefCell;
 // use wasm_bindgen::JsValue;
 
 thread_local! {
-    pub(crate) static PARENTS: RefCell<Vec<Widget>> = RefCell::from(vec![]);
+    pub static PARENTS: RefCell<Vec<Widget>> = RefCell::from(vec![]);
 }
 
 pub struct Group {
