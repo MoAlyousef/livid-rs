@@ -158,6 +158,9 @@ impl Color {
         if let Color::Rgb(rgb) = self {
             let Rgb(r, g, b) = rgb;
             format!("#{:02x}{:02x}{:02x}", r, g, b)
+        } else if let Color::Rgba(rgba) = self {
+            let Rgba(r, g, b, a) = rgb;
+            format!("rgba({}, {}, {}, {})", r, g, b, a)
         } else {
             format!("{:?}", self)
         }
