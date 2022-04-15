@@ -2,6 +2,12 @@
 name = "livid-server"
 version = "0.1.0"
 edition = "2021"
+description = "A simple server for use with livid-desktop and livid-cli"
+repository = "https://github.com/MoAlyousef/livid-rs"
+documentation = "https://docs.rs/livid-server"
+keywords = ["http", "server", "web"]
+readme = "README.md"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -27,6 +27,7 @@ SUBCOMMANDS:
     build     Build your wasm web app
     clean     Clean output artifacts
     serve     Serve the generated index.html
+    deploy    Creates a desktop app using the wasm web app for frontend
     --help    Prints this message or the help of the given subcommand(s)
 ```
 
@@ -48,4 +49,9 @@ If livid-cli finds an index.html shell in the manifest directory, it will use it
     {{SCRIPT}}
   </body>
 </html>
+```
+
+To create a desktop app:
+```
+livid deploy --width=800 --height=600 --title="app name"
 ```
