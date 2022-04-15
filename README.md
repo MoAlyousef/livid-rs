@@ -11,9 +11,9 @@ livid is a lightweight frontend Rust crate for creating web apps via webassembly
 `rustup target add wasm32-unknown-unknown`
 
 ## Usage
-- Install the dister crate (to simplify building and bundling your web app):
+- Install the livid-cli crate (to simplify building and bundling your web app):
 
-`cargo install dister`
+`cargo install livid-cli`
 
 * You can add links to CSS files/urls, and use Widget::set_class_name() to benefit from CSS styling.
 
@@ -71,9 +71,9 @@ fn main() {
 
 ![image](https://user-images.githubusercontent.com/37966791/162965079-25fa2c36-b11f-491c-aa80-d0fc6f279839.png)
 
-- Build and serve using dister:
+- Build and serve using livid-cli:
 
-`dister build` or `dister serve`
+`livid build` or `livid serve`
 
 Livid also a lower level widgets api:
 
@@ -171,55 +171,3 @@ fn main() {
 ```
 
 ![image](https://user-images.githubusercontent.com/37966791/161538847-9a5b564e-90a9-4555-bd9e-37946cad379f.png)
-
-## Usage without dister:
-- Install wasm-bindgen-cli:
-
-`cargo install wasm-bindgen-cli`
-
-- Create a project:
-```toml
-[project]
-name = "myapp"
-
-[dependencies]
-livid = "0.1"
-```
-
-```rust,no_run
-// as above
-```
-
-- Create a dist/index.html file:
-```html
-<html>
-  <head>
-  <meta charset="utf-8">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-  <body>
-    <script src="./myapp.js"></script>
-    <script type="module">
-      import init from "./myapp.js";
-      init();
-    </script>
-  </body>
-</html>
-```
-
-- Build your project with cargo:
-
-`cargo build --release --target wasm32-unknown-unknown`
-
-- Run wasm-bindgen on your generated wasm file
-
-`wasm-bindgen target/wasm32-unknown-unknown/debug/myapp.wasm --out-dir dist --no-typescript --weak-refs`
-
-Notice that the argument weak-refs is passed to wasm-bindgen to enable callback cleanup from the JS side.
-
-This will generate several js glue code inside a `dist` directory, allowing the loading of your wasm binary.
-
-- Serve your index.html using a server of your choosing:
-
-`python3 -m http.server --dir dist`
