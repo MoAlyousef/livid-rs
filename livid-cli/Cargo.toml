@@ -1,9 +1,11 @@
 [package]
-name = "custom-widget"
+name = "livid-cli"
 version = "0.1.0"
 edition = "2021"
+default-run = "livid"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-livid = { path = "../../livid" }
+toml = "0.5"
+livid-server = { path = "../livid-server" }
