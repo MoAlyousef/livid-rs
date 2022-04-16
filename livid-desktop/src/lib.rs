@@ -36,10 +36,9 @@ The dist folder should contain the index.html plus the wasm and javascript glue 
     - RHEL-based distros: sudo dnf install webkit2gtk3-devel.
 */
 
-use fltk_webview_sys as wv;
+pub mod wv;
 use livid_server::Server;
 use std::path::PathBuf;
-use wv::webview_t;
 
 pub struct Settings {
     pub w: i32,
@@ -71,39 +70,33 @@ extern "C" {
 }
 
 pub struct App {
-    wv: webview_t,
+    wv: wv::Webview,
     settings: Settings,
 }
 
 impl App {
+    /// Create a new app
     pub fn new(settings: Settings) -> Self {
-        let wv = unsafe {
-            let wv = wv::webview_create(settings.debug as i32, std::ptr::null_mut() as _);
-            let title = std::ffi::CString::new(settings.title).unwrap();
-            wv::webview_set_title(wv, title.as_ptr() as _);
-            wv::webview_set_size(
-                wv,
-                settings.w,
-                settings.h,
-                if settings.fixed { 3 } else { 0 },
-            );
-            #[cfg(target_os = "macos")]
-            add_nsmenu();
-            wv
-        };
+        let mut wv = wv::Webview::create(settings.debug);
+        wv.set_title(settings.title);
+        wv.set_size(settings.w, settings.h, if settings.fixed { wv::SizeHint::Fixed } else { wv::SizeHint::None });
+        #[cfg(target_os = "macos")]
+        add_nsmenu();
         Self { wv, settings }
     }
-    pub fn run(self) {
+    /// Get the webview of the app
+    pub fn get_webview(&self) -> wv::Webview {
+        self.wv.clone()
+    }
+    /// Run the app
+    pub fn run(mut self) {
         let port = self.settings.port;
         let dist_folder = self.settings.dist_folder;
         std::thread::spawn(move || {
             Server::serve(port, &std::env::current_dir().unwrap().join(dist_folder))
         });
         let addr = format!("http://127.0.0.1:{}", port);
-        let addr = std::ffi::CString::new(addr).unwrap();
-        unsafe {
-            wv::webview_navigate(self.wv, addr.as_ptr() as _);
-            wv::webview_run(self.wv);
-        }
+        self.wv.navigate(&addr);
+        self.wv.run();
     }
 }

@@ -21,6 +21,7 @@ OPTIONS:
     --height  Sets the window's height
     --title   Sets the window's title
     --port    Sets the server's local port
+    --using   Sets the project to be used for the backend
     --help    Prints this message
 "#;
 
@@ -181,10 +182,15 @@ fn deploy(args: &[String]) {
     let mut h = 400;
     let mut title = "my app".to_string();
     let mut port = "8080".to_string();
+    let mut proj_path = None;
     for arg in args {
         if arg == "--help" {
             println!("{}", DEPLOY);
             return;
+        }
+        if let Some(using) = arg.strip_prefix("--using=") {
+            proj_path = Some(PathBuf::from(using));
+            break;
         }
         if let Some(width) = arg.strip_prefix("--width=") {
             w = width.parse().unwrap();
@@ -211,21 +217,28 @@ fn deploy(args: &[String]) {
     let mut crate_name = format!("{}", pkg["package"]["name"]).replace('"', "");
     let cargo_toml = CARGO.to_string().replace("{{crate}}", &crate_name);
     let temp_dir = std::env::temp_dir();
-    let proj = temp_dir.join("livid_temp");
+    let proj = if let Some(proj_path) = proj_path {
+        let cargo_toml = std::fs::read_to_string(proj_path.join("Cargo.toml")).expect("Failed to find a Cargo.toml!");
+        let pkg: toml::Value = cargo_toml.parse().unwrap();
+        crate_name = format!("{}", pkg["package"]["name"]).replace('"', "");
+        proj_path
+    } else {
+        temp_dir.join("livid_temp")
+    };
     if !proj.exists() {
         let mut cargo = Command::new("cargo");
         cargo.current_dir(&temp_dir);
         cargo.args(&["new", "livid_temp"]);
         cargo.spawn().unwrap().wait().unwrap();
+        std::fs::write(
+            proj.join("src").join("main.rs"),
+            &app,
+        )
+        .unwrap();
+        std::fs::write(proj.join("Cargo.toml"), &cargo_toml).unwrap();
     }
-    std::fs::write(
-        temp_dir.join("livid_temp").join("src").join("main.rs"),
-        &app,
-    )
-    .unwrap();
-    std::fs::write(temp_dir.join("livid_temp").join("Cargo.toml"), &cargo_toml).unwrap();
     let mut cargo = Command::new("cargo");
-    cargo.current_dir(temp_dir.join("livid_temp"));
+    cargo.current_dir(&proj);
     cargo.args(&["build", "--release"]);
     cargo.spawn().unwrap().wait().unwrap();
     let cwd = std::env::current_dir().unwrap();
@@ -240,8 +253,7 @@ fn deploy(args: &[String]) {
         crate_name
     };
     std::fs::copy(
-        temp_dir
-            .join("livid_temp")
+            proj
             .join("target")
             .join("release")
             .join(&exe),
