@@ -65,6 +65,10 @@ edition = "2021"
 
 [dependencies]
 livid-desktop = "0.1"
+
+[profile.release]
+opt-level = 3
+strip = true
 "#;
 
 fn main() {
