@@ -199,7 +199,7 @@ fn deploy(args: &[String]) {
             port = p.to_string();
         }
     }
-    build(&["--release".to_string()]);
+    build(&[String::new(), String::new(), "--release".to_string()]);
     let app = APP
         .to_string()
         .replace("{{width}}", &w.to_string())
