@@ -64,7 +64,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-livid-desktop = { path = "/home/rayloom/dev/livid-rs/livid-desktop" }
+livid-desktop = "0.1"
 "#;
 
 fn main() {
