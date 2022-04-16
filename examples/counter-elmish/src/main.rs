@@ -2,14 +2,6 @@ mod detail;
 use crate::detail::{OnEvent, App, Settings};
 use livid::{enums::*, prelude::*, *};
 
-pub fn main() {
-    Counter::new().run(Settings {
-        size: (300, 200),
-        win_color: Some(Color::Rgb(Rgb(250, 250, 250))),
-        ..Default::default()
-    })
-}
-
 #[derive(Default, Copy, Clone)]
 struct Counter {
     value: i32,
@@ -54,4 +46,12 @@ impl App for Counter {
             .on_trigger(Message::DecrementPressed);
         col.end();
     }
+}
+
+fn main() {
+    Counter::new().run(Settings {
+        size: (300, 200),
+        win_color: Some(Color::Rgb(Rgb(250, 250, 250))),
+        ..Default::default()
+    })
 }

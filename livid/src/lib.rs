@@ -76,6 +76,12 @@ fn main() {
 
 `livid build` or `livid serve`
 
+- Build a desktop app with wasm for the frontend using:
+
+`livid deploy --width=600 --height=400`
+
+## Low-level api
+
 Livid also a lower level widgets api:
 
 ```rust,no_run
@@ -172,6 +178,70 @@ fn main() {
 ```
 
 ![image](https://user-images.githubusercontent.com/37966791/161538847-9a5b564e-90a9-4555-bd9e-37946cad379f.png)
+
+## Higher-level api
+Livid is unopinionated. You can build higher-level abstractions on top:
+```rust,no_run
+mod detail; // we define an OnEvent trait for our buttons
+use crate::detail::{OnEvent, App, Settings};
+use livid::{enums::*, prelude::*, *};
+
+#[derive(Default, Copy, Clone)]
+struct Counter {
+    value: i32,
+}
+
+#[derive(Debug, Clone, Copy)]
+enum Message {
+    IncrementPressed,
+    DecrementPressed,
+}
+
+impl App for Counter {
+    type Message = Message;
+
+    fn new() -> Self {
+        Self::default()
+    }
+
+    fn title(&self) -> String {
+        String::from("Counter - livid")
+    }
+
+    fn update(&mut self, message: Message) {
+        match message {
+            Message::IncrementPressed => {
+                self.value += 1;
+            }
+            Message::DecrementPressed => {
+                self.value -= 1;
+            }
+        }
+    }
+
+    fn view(&mut self) {
+        let col = group::Column::default_fill();
+        button::Button::default()
+            .with_label("Increment")
+            .on_trigger(Message::IncrementPressed);
+        frame::Frame::default().with_label(&self.value.to_string());
+        button::Button::default()
+            .with_label("Decrement")
+            .on_trigger(Message::DecrementPressed);
+        col.end();
+    }
+}
+
+fn main() {
+    Counter::new().run(Settings {
+        size: (300, 200),
+        win_color: Some(Color::Rgb(Rgb(250, 250, 250))),
+        ..Default::default()
+    })
+}
+```
+
+Check the examples directory for fuller examples.
 */
 
 pub mod button;
