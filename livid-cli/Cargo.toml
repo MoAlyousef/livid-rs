@@ -13,4 +13,4 @@ keywords = ["wasm", "bundler", "web", "build-tool"]
 [dependencies]
 toml = "0.5"
 fs_extra = "1.2.0"
-livid-server = { path = "../livid-server" }
+livid-server = { version = "0.1", path = "../livid-server" }
