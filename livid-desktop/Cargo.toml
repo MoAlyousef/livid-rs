@@ -14,4 +14,4 @@ license = "MIT"
 
 [dependencies]
 fltk-webview-sys = "0.2"
-livid-server = { path = "../livid-server" }
+livid-server = { version = "0.1", path = "../livid-server" }
