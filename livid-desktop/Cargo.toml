@@ -13,5 +13,5 @@ license = "MIT"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-fltk-webview-sys = { git = "https://github.com/Ar37-rs/fltk-webview" }
+fltk-webview-sys = "0.2.9"
 livid-server = { version = "0.1", path = "../livid-server" }
