@@ -1,5 +1,5 @@
 use crate::{enums::*, traits::{WidgetBase, GroupExt}};
-use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 
 /// Defines the methods implemented by all widgets
 pub trait WidgetExt: WidgetBase {
@@ -117,7 +117,8 @@ pub trait WidgetExt: WidgetBase {
     }
     /// do callback
     fn do_callback(&self, event: Event) {
-        let elem: web_sys::EventTarget = JsValue::from((*self.inner()).clone()).into();
+        let c = self.inner().clone();
+        let elem: &web_sys::EventTarget = c.dyn_ref().unwrap();
         elem.dispatch_event(&web_sys::Event::new(&event.to_str()).unwrap())
             .unwrap();
     }

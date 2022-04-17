@@ -1,4 +1,4 @@
-use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::{any, marker, mem, os::raw};
@@ -153,7 +153,7 @@ impl Document {
     /// add a link
     pub fn add_css_link(href: &str) {
         let link: web_sys::HtmlLinkElement =
-            JsValue::from(Document::get().create_element("link").unwrap()).into();
+            Document::get().create_element("link").unwrap().dyn_into().unwrap();
         link.set_rel("stylesheet");
         link.set_type("text/css");
         link.set_href(href);

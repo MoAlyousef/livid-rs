@@ -52,9 +52,6 @@ pub struct NavBar {
 impl NavBar {
     pub fn add_choice(&self, choice: &str) -> crate::misc::Link {
         let opt = Widget::new(WidgetType::Li);
-        opt.set_style(Style::Display, "block");
-        opt.set_style(Style::Padding, "8px 16px");
-        opt.set_style(Style::TextDecoration, "none");
         let link = Widget::new(WidgetType::A);
         link.set_style(Style::Display, "block");
         link.set_style(Style::Padding, "8px 16px");

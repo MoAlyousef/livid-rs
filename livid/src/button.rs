@@ -1,7 +1,7 @@
 use crate::group::PARENTS;
 use crate::prelude::{WidgetBase, WidgetExt};
 use crate::{enums::*, widget::Widget};
-use wasm_bindgen::JsValue;
+use wasm_bindgen::JsCast;
 
 #[derive(Clone)]
 pub struct Button {
@@ -10,11 +10,11 @@ pub struct Button {
 
 impl Button {
     pub fn disabled(&self) -> bool {
-        let elem: web_sys::HtmlButtonElement = JsValue::from((*self.inner).clone()).into();
+        let elem: &web_sys::HtmlButtonElement = self.inner.dyn_ref().unwrap();
         elem.disabled()
     }
     pub fn set_disabled(&self, val: bool) {
-        let elem: web_sys::HtmlButtonElement = JsValue::from((*self.inner).clone()).into();
+        let elem: &web_sys::HtmlButtonElement = self.inner.dyn_ref().unwrap();
         elem.set_disabled(val);
     }
 }
@@ -64,7 +64,7 @@ impl RadioButton {
     }
     pub fn checked(&self) -> bool {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: web_sys::HtmlInputElement = JsValue::from(btn).into();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
             elem.checked()
         } else {
             false
@@ -72,13 +72,13 @@ impl RadioButton {
     }
     pub fn set_checked(&self, val: bool) {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: web_sys::HtmlInputElement = JsValue::from(btn).into();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
             elem.set_checked(val);
         }
     }
     pub fn disabled(&self) -> bool {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: web_sys::HtmlInputElement = JsValue::from(btn).into();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
             elem.disabled()
         } else {
             false
@@ -86,7 +86,7 @@ impl RadioButton {
     }
     pub fn set_disabled(&self, val: bool) {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: web_sys::HtmlInputElement = JsValue::from(btn).into();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
             elem.set_disabled(val);
         }
     }
@@ -178,7 +178,7 @@ impl CheckButton {
     }
     pub fn checked(&self) -> bool {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: web_sys::HtmlInputElement = JsValue::from(btn).into();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
             elem.checked()
         } else {
             false
@@ -186,13 +186,13 @@ impl CheckButton {
     }
     pub fn set_checked(&self, val: bool) {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: web_sys::HtmlInputElement = JsValue::from(btn).into();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
             elem.set_checked(val);
         }
     }
     pub fn disabled(&self) -> bool {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: web_sys::HtmlInputElement = JsValue::from(btn).into();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
             elem.disabled()
         } else {
             false
@@ -200,7 +200,7 @@ impl CheckButton {
     }
     pub fn set_disabled(&self, val: bool) {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: web_sys::HtmlInputElement = JsValue::from(btn).into();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
             elem.set_disabled(val);
         }
     }

@@ -1,14 +1,16 @@
 use crate::enums::*;
 use crate::traits::WidgetExt;
-use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 
 pub trait InputExt: WidgetExt {
     fn value(&self) -> String {
-        let elem: web_sys::HtmlInputElement = JsValue::from((*self.inner()).clone()).into();
-        elem.value()
+        let c = self.inner().clone();
+        let elem: &web_sys::HtmlInputElement = c.dyn_ref().unwrap();
+        elem.clone().value()
     }
     fn set_value(&self, s: &str) {
-        let elem: web_sys::HtmlInputElement = JsValue::from((*self.inner()).clone()).into();
+        let c = self.inner().clone();
+        let elem: &web_sys::HtmlInputElement = c.dyn_ref().unwrap();
         elem.set_value(s);
     }
     /// Sets the widget's color

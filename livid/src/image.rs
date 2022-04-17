@@ -1,7 +1,7 @@
 use crate::group::PARENTS;
 use crate::prelude::*;
 use crate::{enums::*, widget::Widget};
-use wasm_bindgen::JsValue;
+use wasm_bindgen::JsCast;
 
 #[derive(Clone)]
 pub struct Image {
@@ -10,7 +10,7 @@ pub struct Image {
 
 impl Image {
     pub fn set_src(&self, href: &str) {
-        let elem: web_sys::HtmlImageElement = JsValue::from((*self.inner).clone()).into();
+        let elem: &web_sys::HtmlImageElement = self.inner.dyn_ref().unwrap();
         elem.set_src(href);
     }
     pub fn with_src(self, href: &str) -> Self {
@@ -18,7 +18,7 @@ impl Image {
         self
     }
     pub fn set_size(&self, w: u32, h: u32) {
-        let elem: web_sys::HtmlImageElement = JsValue::from((*self.inner).clone()).into();
+        let elem: &web_sys::HtmlImageElement = self.inner.dyn_ref().unwrap();
         elem.set_width(w);
         elem.set_height(h);
     }

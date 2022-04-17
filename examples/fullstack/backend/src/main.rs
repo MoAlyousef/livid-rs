@@ -12,6 +12,15 @@ fn main() {
     });
 
     let mut wv = a.get_webview();
+
+    wv.init("window.globalVal = 2;");
+
+    wv.bind("quit", {
+        |_, _| {
+            std::process::exit(0);
+        }
+    });
+
     wv.bind("addTwo", {
         let mut wv = wv.clone();
         move |_, content| {
@@ -20,7 +29,7 @@ fn main() {
                     if let Ok(val) = s.parse::<f64>() {
                         let ret = val + 2.0;
                         wv.eval(&format!(
-                            "document.getElementById('result').innerText = {0};",
+                            "window.globalVal = {0}; document.getElementById('result').innerText = {0};",
                             ret
                         ));
                     }
@@ -28,5 +37,6 @@ fn main() {
             }
         }
     });
+
     a.run();
 }
