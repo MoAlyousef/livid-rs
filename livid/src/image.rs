@@ -1,4 +1,3 @@
-use crate::group::PARENTS;
 use crate::prelude::*;
 use crate::{enums::*, widget::Widget};
 use wasm_bindgen::JsCast;
@@ -31,11 +30,7 @@ impl Image {
 impl WidgetBase for Image {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Img);
-        PARENTS.with(|p| {
-            if let Some(last) = p.borrow().last() {
-                last.append(&inner);
-            }
-        });
+        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
     fn default_fill() -> Self {

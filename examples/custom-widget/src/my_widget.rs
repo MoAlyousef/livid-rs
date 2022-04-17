@@ -1,6 +1,5 @@
-use livid::group::PARENTS;
 use livid::prelude::*;
-use livid::{enums::*, widget::Widget};
+use livid::{enums::*, group::Group, widget::Widget};
 
 #[derive(Clone)]
 pub struct MyMenuBar {
@@ -43,11 +42,7 @@ impl WidgetBase for MyMenuBar {
         inner.set_style(Style::Overflow, "hidden");
         inner.set_style(Style::Border, "1px solid #e7e7e7");
         inner.set_style(Style::BackgroundColor, "#f1f1f1");
-        PARENTS.with(|p| {
-            if let Some(last) = p.borrow().last() {
-                last.append(&inner);
-            }
-        });
+        Group::current_attach(&inner);
         Self { inner }
     }
     fn default_fill() -> Self {

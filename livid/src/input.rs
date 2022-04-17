@@ -1,4 +1,3 @@
-use crate::group::PARENTS;
 use crate::prelude::{InputExt, WidgetBase, WidgetExt};
 use crate::{enums::*, widget::Widget};
 
@@ -10,11 +9,7 @@ pub struct Input {
 impl WidgetBase for Input {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Input);
-        PARENTS.with(|p| {
-            if let Some(last) = p.borrow().last() {
-                last.append(&inner);
-            }
-        });
+        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
     fn default_fill() -> Self {
@@ -46,11 +41,7 @@ impl WidgetBase for TextArea {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Textarea);
         inner.set_style(Style::Resize, "none");
-        PARENTS.with(|p| {
-            if let Some(last) = p.borrow().last() {
-                last.append(&inner);
-            }
-        });
+        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
     fn default_fill() -> Self {

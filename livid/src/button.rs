@@ -1,4 +1,3 @@
-use crate::group::PARENTS;
 use crate::prelude::{WidgetBase, WidgetExt};
 use crate::{enums::*, widget::Widget};
 use wasm_bindgen::JsCast;
@@ -22,11 +21,7 @@ impl Button {
 impl WidgetBase for Button {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Button);
-        PARENTS.with(|p| {
-            if let Some(last) = p.borrow().last() {
-                last.append(&inner);
-            }
-        });
+        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
     fn default_fill() -> Self {
@@ -100,11 +95,7 @@ impl WidgetBase for RadioButton {
         let label = Widget::new(WidgetType::Label);
         inner.append(&btn);
         inner.append(&label);
-        PARENTS.with(|p| {
-            if let Some(last) = p.borrow().last() {
-                last.append(&inner);
-            }
-        });
+        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
     fn default_fill() -> Self {
@@ -120,36 +111,6 @@ impl WidgetBase for RadioButton {
     }
     fn inner(&self) -> Widget {
         self.inner.clone()
-    }
-    fn new<T: Into<Option<&'static str>>>(x: i32, y: i32, w: i32, h: i32, title: T) -> Self
-    where
-        Self: Sized,
-    {
-        let inner = {
-            let inner = Widget::new(WidgetType::Div);
-            let btn = Widget::new(WidgetType::Input);
-            btn.set_attribute("type", "radio").unwrap();
-            let label = Widget::new(WidgetType::Label);
-            label.set_text_content(title.into());
-            inner.append(&btn);
-            inner.append(&label);
-            PARENTS.with(|p| {
-                if let Some(last) = p.borrow().last() {
-                    last.append(&inner);
-                }
-            });
-            inner
-        };
-        if crate::window::HAS_WINDOW.load(std::sync::atomic::Ordering::Relaxed) {
-            inner.set_style(Style::Position, "relative");
-        } else {
-            inner.set_style(Style::Position, "absolute");
-        }
-        inner.set_style(Style::Left, &x.to_string());
-        inner.set_style(Style::Top, &y.to_string());
-        inner.set_style(Style::Width, &w.to_string());
-        inner.set_style(Style::Height, &h.to_string());
-        Self { inner }
     }
 }
 
@@ -214,11 +175,7 @@ impl WidgetBase for CheckButton {
         let label = Widget::new(WidgetType::Label);
         inner.append(&btn);
         inner.append(&label);
-        PARENTS.with(|p| {
-            if let Some(last) = p.borrow().last() {
-                last.append(&inner);
-            }
-        });
+        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
     fn default_fill() -> Self {
@@ -247,14 +204,10 @@ impl WidgetBase for CheckButton {
             label.set_text_content(title.into());
             inner.append(&btn);
             inner.append(&label);
-            PARENTS.with(|p| {
-                if let Some(last) = p.borrow().last() {
-                    last.append(&inner);
-                }
-            });
+            crate::group::Group::current_attach(&inner);
             inner
         };
-        if crate::window::HAS_WINDOW.load(std::sync::atomic::Ordering::Relaxed) {
+        if crate::window::Window::has_window() {
             inner.set_style(Style::Position, "relative");
         } else {
             inner.set_style(Style::Position, "absolute");

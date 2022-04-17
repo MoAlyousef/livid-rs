@@ -1,15 +1,14 @@
 use crate::traits::IsElementIterable;
 use crate::traits::widget_base::WidgetBase;
 use crate::enums::{AlignContent, Style};
-use crate::group::PARENTS;
 use crate::traits::WidgetExt;
 
 pub trait GroupExt: WidgetExt {
     fn begin(&self) {
-        PARENTS.with(|p| p.borrow_mut().push(self.inner()));
+        crate::group::Group::group_begin(&self.inner());
     }
     fn end(&self) {
-        PARENTS.with(|p| p.borrow_mut().pop());
+        crate::group::Group::group_end();
     }
     fn add<W: WidgetExt>(&self, widget: &W) where Self: Sized {
         self.inner().append(&widget.inner());

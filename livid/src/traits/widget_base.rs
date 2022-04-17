@@ -10,7 +10,7 @@ pub trait WidgetBase {
     {
         let s = Self::default();
         s.inner().set_text_content(title.into());
-        if crate::window::HAS_WINDOW.load(std::sync::atomic::Ordering::Relaxed) {
+        if crate::window::Window::has_window() {
             s.inner().set_style(Style::Position, "relative");
         } else {
             s.inner().set_style(Style::Position, "absolute");

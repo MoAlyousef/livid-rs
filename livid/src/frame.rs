@@ -1,4 +1,3 @@
-use crate::group::PARENTS;
 use crate::prelude::*;
 use crate::{enums::*, widget::Widget};
 
@@ -11,11 +10,7 @@ impl WidgetBase for Frame {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Div);
         inner.set_style(Style::TextAlign, "center");
-        PARENTS.with(|p| {
-            if let Some(last) = p.borrow().last() {
-                last.append(&inner);
-            }
-        });
+        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
     fn default_fill() -> Self {
@@ -44,11 +39,7 @@ pub struct Label {
 impl WidgetBase for Label {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Div);
-        PARENTS.with(|p| {
-            if let Some(last) = p.borrow().last() {
-                last.append(&inner);
-            }
-        });
+        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
     fn default_fill() -> Self {

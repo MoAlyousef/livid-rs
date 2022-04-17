@@ -9,7 +9,7 @@ fn main() {
     frame::Frame::default().with_id("result");
 
     btn1.add_callback(Event::Click, move |_| {
-        rt::call("addTwo", &[&inp.value()]).ok();
+        rt::post_message(&format!("addTwo:{}", &inp.value())).ok();
     });
 
     btn2.add_callback(Event::Click, move |_| {
@@ -18,6 +18,6 @@ fn main() {
     });
 
     quit_btn.add_callback(Event::Click, move |_| {
-        rt::call("quit", &[]).ok();
+        rt::post_message("quit").ok();
     });
 }

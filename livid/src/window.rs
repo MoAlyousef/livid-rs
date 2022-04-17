@@ -1,5 +1,4 @@
 use crate::document::Document;
-use crate::group::PARENTS;
 use crate::prelude::{GroupExt, WidgetBase, WidgetExt};
 use crate::{enums::*, widget::Widget};
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -16,6 +15,11 @@ impl Window {
         s.inner.set_style(Style::Width, &format!("{}%", x));
         s.inner.set_style(Style::Height, &format!("{}%", y));
         s
+    }
+    
+    /// Check if the document has a main livid window
+    pub fn has_window() -> bool {
+        HAS_WINDOW.load(std::sync::atomic::Ordering::Relaxed)
     }
 }
 
@@ -36,12 +40,8 @@ impl WidgetBase for Window {
         middle.append(&inner);
         inner.set_style(Style::MarginLeft, "auto");
         inner.set_style(Style::MarginRight, "auto");
-        PARENTS.with(|p| {
-            if let Some(last) = p.borrow().last() {
-                last.append(&inner);
-            }
-            p.borrow_mut().push(inner.clone());
-        });
+        crate::group::Group::current_attach(&inner);
+        crate::group::Group::set_current(&inner);
         HAS_WINDOW.store(true, Ordering::Relaxed);
         Self { inner }
     }
