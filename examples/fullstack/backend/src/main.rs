@@ -38,5 +38,23 @@ fn main() {
         }
     });
 
+    // Anothre way of doing things
+    wv.bind("call", {
+        let mut wv = wv.clone();
+        move |_, content| {
+            // strip first and last angle brackets and quotes
+            let c = &content[2..content.len() - 2];
+            if let Some(val) = c.strip_prefix("addThree:") {
+                if let Ok(val) = val.parse::<f64>() {
+                    let ret = val + 3.0;
+                    wv.eval(&format!(
+                        "window.globalVal = {0}; document.getElementById('result').innerText = {0};",
+                        ret
+                    ));
+                }
+            }
+        }
+    });
+
     a.run();
 }
