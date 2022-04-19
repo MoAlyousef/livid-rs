@@ -257,6 +257,7 @@ pub mod menu;
 pub mod misc;
 pub mod prelude;
 pub mod rt;
+pub mod table;
 mod traits;
 pub mod utils;
 pub mod widget;

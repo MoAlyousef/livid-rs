@@ -5,6 +5,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 
 pub(crate) static HAS_WINDOW: AtomicBool = AtomicBool::new(false);
 
+#[derive(Debug, Clone)]
 pub struct Window {
     inner: Widget,
 }
@@ -45,12 +46,7 @@ impl WidgetBase for Window {
         HAS_WINDOW.store(true, Ordering::Relaxed);
         Self { inner }
     }
-    fn default_fill() -> Self {
-        let s = Self::default();
-        s.inner.set_style(Style::Width, "100%");
-        s.inner.set_style(Style::Height, "100%");
-        s
-    }
+
     fn new<T: Into<Option<&'static str>>>(_x: i32, _y: i32, w: i32, h: i32, title: T) -> Self {
         if let Some(title) = title.into() {
             Document::get().set_title(title);

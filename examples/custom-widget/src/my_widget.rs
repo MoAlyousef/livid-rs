@@ -1,7 +1,7 @@
 use livid::prelude::*;
 use livid::{enums::*, group::Group, widget::Widget};
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct MyMenuBar {
     inner: Widget,
 }
@@ -44,12 +44,6 @@ impl WidgetBase for MyMenuBar {
         inner.set_style(Style::BackgroundColor, "#f1f1f1");
         Group::current_attach(&inner);
         Self { inner }
-    }
-    fn default_fill() -> Self {
-        let s = Self::default();
-        s.inner.set_style(Style::Width, "100%");
-        s.inner.set_style(Style::Height, "100%");
-        s
     }
     unsafe fn from_widget(widget: &Widget) -> Self {
         Self {

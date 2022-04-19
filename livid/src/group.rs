@@ -39,12 +39,7 @@ impl WidgetBase for Group {
         Group::set_current(&inner);
         Self { inner }
     }
-    fn default_fill() -> Self {
-        let s = Self::default();
-        s.inner.set_style(Style::Width, "100%");
-        s.inner.set_style(Style::Height, "100%");
-        s
-    }
+
     unsafe fn from_widget(widget: &Widget) -> Self {
         Self {
             inner: widget.clone(),
@@ -74,12 +69,7 @@ impl WidgetBase for Column {
         Group::set_current(&inner);
         Self { inner }
     }
-    fn default_fill() -> Self {
-        let s = Self::default();
-        s.inner.set_style(Style::Width, "100%");
-        s.inner.set_style(Style::Height, "100%");
-        s
-    }
+
     unsafe fn from_widget(widget: &Widget) -> Self {
         Self {
             inner: widget.clone(),
@@ -109,12 +99,7 @@ impl WidgetBase for Row {
         Group::set_current(&inner);
         Self { inner }
     }
-    fn default_fill() -> Self {
-        let s = Self::default();
-        s.inner.set_style(Style::Width, "100%");
-        s.inner.set_style(Style::Height, "100%");
-        s
-    }
+
     unsafe fn from_widget(widget: &Widget) -> Self {
         Self {
             inner: widget.clone(),

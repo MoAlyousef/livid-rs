@@ -4,7 +4,7 @@ use std::ops::{Deref, DerefMut};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 /// An Html Element wrapper
 pub struct Widget {
     elem: web_sys::Element,

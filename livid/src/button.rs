@@ -2,7 +2,7 @@ use crate::prelude::{WidgetBase, WidgetExt};
 use crate::{enums::*, widget::Widget};
 use wasm_bindgen::JsCast;
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Button {
     inner: Widget,
 }
@@ -24,12 +24,7 @@ impl WidgetBase for Button {
         crate::group::Group::current_attach(&inner);
         Self { inner }
     }
-    fn default_fill() -> Self {
-        let s = Self::default();
-        s.inner.set_style(Style::Width, "100%");
-        s.inner.set_style(Style::Height, "100%");
-        s
-    }
+
     unsafe fn from_widget(widget: &Widget) -> Self {
         Self {
             inner: widget.clone(),
@@ -42,7 +37,7 @@ impl WidgetBase for Button {
 
 impl WidgetExt for Button {}
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct RadioButton {
     inner: Widget,
 }
@@ -98,12 +93,7 @@ impl WidgetBase for RadioButton {
         crate::group::Group::current_attach(&inner);
         Self { inner }
     }
-    fn default_fill() -> Self {
-        let s = Self::default();
-        s.inner.set_style(Style::Width, "100%");
-        s.inner.set_style(Style::Height, "100%");
-        s
-    }
+
     unsafe fn from_widget(widget: &Widget) -> Self {
         Self {
             inner: widget.clone(),
@@ -122,7 +112,7 @@ impl WidgetExt for RadioButton {
     }
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct CheckButton {
     inner: Widget,
 }
@@ -178,12 +168,7 @@ impl WidgetBase for CheckButton {
         crate::group::Group::current_attach(&inner);
         Self { inner }
     }
-    fn default_fill() -> Self {
-        let s = Self::default();
-        s.inner.set_style(Style::Width, "100%");
-        s.inner.set_style(Style::Height, "100%");
-        s
-    }
+
     unsafe fn from_widget(widget: &Widget) -> Self {
         Self {
             inner: widget.clone(),
@@ -191,32 +176,6 @@ impl WidgetBase for CheckButton {
     }
     fn inner(&self) -> Widget {
         self.inner.clone()
-    }
-    fn new<T: Into<Option<&'static str>>>(x: i32, y: i32, w: i32, h: i32, title: T) -> Self
-    where
-        Self: Sized,
-    {
-        let inner = {
-            let inner = Widget::new(WidgetType::Div);
-            let btn = Widget::new(WidgetType::Input);
-            btn.set_attribute("type", "checkbox").unwrap();
-            let label = Widget::new(WidgetType::Label);
-            label.set_text_content(title.into());
-            inner.append(&btn);
-            inner.append(&label);
-            crate::group::Group::current_attach(&inner);
-            inner
-        };
-        if crate::window::Window::has_window() {
-            inner.set_style(Style::Position, "relative");
-        } else {
-            inner.set_style(Style::Position, "absolute");
-        }
-        inner.set_style(Style::Left, &x.to_string());
-        inner.set_style(Style::Top, &y.to_string());
-        inner.set_style(Style::Width, &w.to_string());
-        inner.set_style(Style::Height, &h.to_string());
-        Self { inner }
     }
 }
 

@@ -2,7 +2,12 @@ use crate::{enums::*, widget::Widget};
 
 pub trait WidgetBase {
     fn default() -> Self where Self: Sized;
-    fn default_fill() -> Self where Self: Sized;
+    fn default_fill() -> Self where Self: Sized {
+        let s = Self::default();
+        s.inner().set_style(Style::Width, "100%");
+        s.inner().set_style(Style::Height, "100%");
+        s
+    }
     /// Construct a new widget
     fn new<T: Into<Option<&'static str>>>(x: i32, y: i32, w: i32, h: i32, title: T) -> Self
     where

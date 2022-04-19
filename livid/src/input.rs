@@ -1,7 +1,7 @@
 use crate::prelude::{InputExt, WidgetBase, WidgetExt};
 use crate::{enums::*, widget::Widget};
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Input {
     inner: Widget,
 }
@@ -12,12 +12,7 @@ impl WidgetBase for Input {
         crate::group::Group::current_attach(&inner);
         Self { inner }
     }
-    fn default_fill() -> Self {
-        let s = Self::default();
-        s.inner.set_style(Style::Width, "100%");
-        s.inner.set_style(Style::Height, "100%");
-        s
-    }
+
     unsafe fn from_widget(widget: &Widget) -> Self {
         Self {
             inner: widget.clone(),
@@ -32,7 +27,7 @@ impl WidgetExt for Input {}
 
 impl InputExt for Input {}
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct TextArea {
     inner: Widget,
 }
@@ -44,12 +39,7 @@ impl WidgetBase for TextArea {
         crate::group::Group::current_attach(&inner);
         Self { inner }
     }
-    fn default_fill() -> Self {
-        let s = Self::default();
-        s.inner.set_style(Style::Width, "100%");
-        s.inner.set_style(Style::Height, "100%");
-        s
-    }
+
     unsafe fn from_widget(widget: &Widget) -> Self {
         Self {
             inner: widget.clone(),

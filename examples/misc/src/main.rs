@@ -16,41 +16,6 @@ fn div() -> Widget {
     Widget::new(WidgetType::Div)
 }
 
-fn table() -> Widget {
-    Widget::new(WidgetType::Table)
-}
-
-fn tbody() -> Widget {
-    Widget::new(WidgetType::Tbody)
-}
-
-fn tr() -> Widget {
-    Widget::new(WidgetType::Tr)
-}
-
-fn td() -> Widget {
-    Widget::new(WidgetType::Td)
-}
-
-fn create_table(data: &[Vec<i32>]) -> Widget {
-    let t = table();
-    t.set_attribute("border", "1").unwrap();
-    let tb = tbody();
-    t.append(&tb);
-    for item in data.iter() {
-        let tr = tr();
-        tb.append(&tr);
-
-        for sub in item.iter() {
-            let td = td();
-            td.set_attribute("width", "100").unwrap();
-            td.set_text_content(Some(&sub.to_string()));
-            tr.append(&td);
-        }
-    }
-    t
-}
-
 fn main() {
     let ul = ul();
     for i in 0..10 {
@@ -78,11 +43,4 @@ fn main() {
         </svg>    
         "#,
     );
-
-    let data = vec![
-        vec![1, 2, 3, 4, 5, 6, 7],
-        vec![10, 11, 12, 13, 14, 15, 16]
-    ];
-
-    create_table(&data);
 }
