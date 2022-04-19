@@ -4,12 +4,12 @@ use wasm_bindgen::JsCast;
 
 pub trait InputExt: WidgetExt {
     fn value(&self) -> String {
-        let c = self.inner().clone();
+        let c = self.inner();
         let elem: &web_sys::HtmlInputElement = c.dyn_ref().unwrap();
         elem.clone().value()
     }
     fn set_value(&self, s: &str) {
-        let c = self.inner().clone();
+        let c = self.inner();
         let elem: &web_sys::HtmlInputElement = c.dyn_ref().unwrap();
         elem.set_value(s);
     }

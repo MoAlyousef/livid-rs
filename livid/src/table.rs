@@ -33,7 +33,7 @@ impl TableView {
             for sub in item.iter() {
                 let td = td();
                 td.set_attribute("width", "100").unwrap();
-                td.set_text_content(Some(&sub.to_string()));
+                td.set_text_content(Some(sub));
                 tr.append(&td);
             }
         }

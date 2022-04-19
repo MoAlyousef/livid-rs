@@ -117,7 +117,7 @@ pub trait WidgetExt: WidgetBase {
     }
     /// do callback
     fn do_callback(&self, event: Event) {
-        let c = self.inner().clone();
+        let c = self.inner();
         let elem: &web_sys::EventTarget = c.dyn_ref().unwrap();
         elem.dispatch_event(&web_sys::Event::new(&event.to_str()).unwrap())
             .unwrap();

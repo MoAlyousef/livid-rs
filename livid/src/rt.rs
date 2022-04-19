@@ -13,7 +13,7 @@ pub fn call(method: &str, args: &[&str]) -> Result<JsValue, JsValue> {
 
 pub fn post_message(arg: &str) -> Result<JsValue, JsValue> {
     let obj = web_sys::window().unwrap();
-    let ipc: JsValue = Reflect::get(&obj, &"ipc".into())?.into();
+    let ipc: JsValue = Reflect::get(&obj, &"ipc".into())?;
     let method: js_sys::Function = Reflect::get(&ipc, &"postMessage".into())?.into();
     let arguments = js_sys::Array::new();
     arguments.push(&JsValue::from_str(arg));
@@ -22,7 +22,7 @@ pub fn post_message(arg: &str) -> Result<JsValue, JsValue> {
 
 pub fn get_variable(name: &str) -> Result<JsValue, JsValue> {
     let obj = web_sys::window().unwrap();
-    let name: JsValue = Reflect::get(&obj, &name.into())?.into();
+    let name: JsValue = Reflect::get(&obj, &name.into())?;
     Ok(name)
 }
 

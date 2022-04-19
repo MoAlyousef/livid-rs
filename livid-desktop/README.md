@@ -10,6 +10,7 @@ livid-desktop = "0.1"
 In your main.rs
 ```rust,no_run
 use livid_desktop::{App, Settings};
+use std::path::PathBuf;
 
 fn main() {
     let a = App::new(Settings {
@@ -18,7 +19,7 @@ fn main() {
         title: "My App",
         fixed: true,
         port: 8080, // the default
-        dist_folder: PathBuf::from("dist"), // the default
+        dist_folder: PathBuf::from("examples/dist"), // the default
         ..Default::default()
     });
     a.run();

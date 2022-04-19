@@ -181,7 +181,7 @@ fn main() {
 
 ## Higher-level api
 Livid is unopinionated. You can build higher-level abstractions on top:
-```rust,no_run
+```rust,ignore
 mod detail; // we define an OnEvent trait for our buttons
 use crate::detail::{OnEvent, App, Settings};
 use livid::{enums::*, prelude::*, *};
@@ -243,6 +243,7 @@ fn main() {
 
 Check the examples directory for fuller examples.
 */
+#![allow(clippy::needless_doctest_main)]
 
 pub mod button;
 pub mod console;
