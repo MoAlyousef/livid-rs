@@ -1,6 +1,6 @@
 # livid-cli
 
-Dister builds and bundles your wasm web app.
+dister builds and bundles your wasm web app.
 
 ## Installation
 `cargo install livid-cli`
