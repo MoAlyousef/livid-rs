@@ -2,10 +2,10 @@ use livid_server::Server;
 use std::path::PathBuf;
 use std::process::Command;
 
-const USAGE: &str = r#"livid {{VERSION}}
+const USAGE: &str = r#"{{BIN}} {{VERSION}}
 Builds and bundles your wasm web app.
 USAGE:
-    livid <SUBCOMMAND>
+    {{BIN}} <SUBCOMMAND>
 SUBCOMMANDS:
     build     Build your wasm web app
     clean     Clean output artifacts
@@ -15,7 +15,7 @@ SUBCOMMANDS:
 "#;
 
 const DEPLOY: &str = r#"USAGE:
-    livid deploy <OPTIONS>
+    {{BIN}} deploy <OPTIONS>
 OPTIONS:
     --width   Sets the window's width
     --height  Sets the window's height
@@ -72,18 +72,18 @@ opt-level = 3
 strip = true
 "#;
 
-pub fn handle_args(args: &[String]) {
+pub fn handle_args(bin_name: &str, args: &[String]) {
     if args.len() == 1 {
-        help();
+        help(bin_name);
         return;
     }
     match args[1].as_str() {
         "build" => build(args),
         "serve" => serve(args),
-        "deploy" => deploy(args),
+        "deploy" => deploy(bin_name, args),
         "clean" => clean(),
-        "--help" | "--version" => help(),
-        _ => help(),
+        "--help" | "--version" => help(bin_name),
+        _ => help(bin_name),
     }
 }
 
@@ -93,8 +93,10 @@ fn check_prog(prog: &str) -> bool {
     cmd.output().is_ok()
 }
 
-fn help() {
-    let usage = USAGE.replace("{{VERSION}}", env!("CARGO_PKG_VERSION"));
+fn help(bin_name: &str) {
+    let usage = USAGE
+        .replace("{{BIN}}", bin_name)
+        .replace("{{VERSION}}", env!("CARGO_PKG_VERSION"));
     println!("{}", usage);
 }
 
@@ -172,7 +174,7 @@ fn build(args: &[String]) {
     }
 }
 
-fn deploy(args: &[String]) {
+fn deploy(bin_name: &str, args: &[String]) {
     let mut w = 600;
     let mut h = 400;
     let mut title = "my app".to_string();
@@ -180,7 +182,7 @@ fn deploy(args: &[String]) {
     let mut proj_path = None;
     for arg in args {
         if arg == "--help" {
-            println!("{}", DEPLOY);
+            println!("{}", DEPLOY.replace("{{BIN}}", bin_name));
             return;
         }
         if let Some(using) = arg.strip_prefix("--using=") {
@@ -213,7 +215,8 @@ fn deploy(args: &[String]) {
     let cargo_toml = CARGO.to_string().replace("{{crate}}", &crate_name);
     let temp_dir = std::env::temp_dir();
     let proj = if let Some(proj_path) = proj_path {
-        let cargo_toml = std::fs::read_to_string(proj_path.join("Cargo.toml")).expect("Failed to find a Cargo.toml!");
+        let cargo_toml = std::fs::read_to_string(proj_path.join("Cargo.toml"))
+            .expect("Failed to find a Cargo.toml!");
         let pkg: toml::Value = cargo_toml.parse().unwrap();
         crate_name = format!("{}", pkg["package"]["name"]).replace('"', "");
         proj_path
@@ -225,11 +228,7 @@ fn deploy(args: &[String]) {
         cargo.current_dir(&temp_dir);
         cargo.args(&["new", "livid_temp"]);
         cargo.spawn().unwrap().wait().unwrap();
-        std::fs::write(
-            proj.join("src").join("main.rs"),
-            &app,
-        )
-        .unwrap();
+        std::fs::write(proj.join("src").join("main.rs"), &app).unwrap();
         std::fs::write(proj.join("Cargo.toml"), &cargo_toml).unwrap();
     }
     let mut cargo = Command::new("cargo");
@@ -248,10 +247,7 @@ fn deploy(args: &[String]) {
         crate_name
     };
     std::fs::copy(
-            proj
-            .join("target")
-            .join("release")
-            .join(&exe),
+        proj.join("target").join("release").join(&exe),
         bundle.join(exe),
     )
     .unwrap();
