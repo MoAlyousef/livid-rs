@@ -48,12 +48,12 @@ impl NavBar {
         link.set_style(Style::TextDecoration, "none");
         link.set_text_content(Some(choice));
         link.add_callback(Event::MouseOver, |l| {
-            l.set_style(Style::BackgroundColor, "#555");
-            l.set_style(Style::Color, "white");
+            l.set_style(Style::BackgroundColor, "#d3d3d3");
+            // l.set_style(Style::Color, "white");
         });
         link.add_callback(Event::MouseLeave, |l| {
             l.set_style(Style::BackgroundColor, "rgba(0,0,0,0)");
-            l.set_style(Style::Color, "black");
+            // l.set_style(Style::Color, "black");
         });
         opt.append(&link);
         self.inner.append(&opt);
@@ -105,12 +105,12 @@ impl MenuBar {
         link.set_style(Style::TextDecoration, "none");
         link.set_text_content(Some(choice));
         link.add_callback(Event::MouseOver, |l| {
-            l.set_style(Style::BackgroundColor, "#555");
-            l.set_style(Style::Color, "white");
+            l.set_style(Style::BackgroundColor, "#d3d3d3");
+            // l.set_style(Style::Color, "white");
         });
         link.add_callback(Event::MouseLeave, |l| {
             l.set_style(Style::BackgroundColor, "rgba(0,0,0,0)");
-            l.set_style(Style::Color, "black");
+            // l.set_style(Style::Color, "black");
         });
         opt.append(&link);
         self.inner.append(&opt);

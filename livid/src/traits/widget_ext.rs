@@ -22,6 +22,19 @@ pub trait WidgetExt: WidgetBase {
         self.set_id(id);
         self
     }
+    fn set_class(&self, class: &str) {
+        self.inner().set_class_name(class);
+    }
+    fn with_class(self, class: &str) -> Self
+    where
+        Self: Sized,
+    {
+        self.set_class(class);
+        self
+    }
+    fn class(&self) -> String {
+        self.inner().class_name()
+    }
     /// Sets the widget's label
     fn set_label(&self, title: &str) {
         self.inner().set_text_content(Some(title))
