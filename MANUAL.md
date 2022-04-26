@@ -47,7 +47,7 @@ fn main() {
 
 - Run wasm-bindgen on your generated wasm file
 
-`wasm-bindgen target/wasm32-unknown-unknown/debug/myapp.wasm --out-dir dist --no-typescript --weak-refs`
+`wasm-bindgen target/wasm32-unknown-unknown/debug/myapp.wasm --out-dir dist --target web --no-typescript --weak-refs`
 
 Notice that the argument weak-refs is passed to wasm-bindgen to enable callback cleanup from the JS side.
 
