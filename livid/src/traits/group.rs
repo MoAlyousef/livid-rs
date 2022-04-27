@@ -10,6 +10,9 @@ pub trait GroupExt: WidgetExt {
     fn end(&self) {
         crate::group::Group::group_end();
     }
+    fn clear(&self) {
+        self.inner().set_inner_html("");
+    }
     fn add<W: WidgetExt>(&self, widget: &W) where Self: Sized {
         self.inner().append(&widget.inner());
     }

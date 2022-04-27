@@ -1,83 +1,15 @@
 use livid::{enums::*, prelude::*, *};
 use std::any::Any;
 use std::cell::RefCell;
-use std::marker;
 use std::rc::Rc;
 
+type Chan = (
+    crossbeam_channel::Sender<Box<dyn Any + Send + Sync>>,
+    crossbeam_channel::Receiver<Box<dyn Any + Send + Sync>>,
+);
+
 lazy_static::lazy_static! {
-    static ref CHANNEL: (crossbeam_channel::Sender<Box<dyn Any + Send + Sync>>, crossbeam_channel::Receiver<Box<dyn Any + Send + Sync>>) = crossbeam_channel::unbounded();
-    static ref SENDER: crossbeam_channel::Sender<Box<dyn Any + Send + Sync>> = CHANNEL.clone().0;
-    static ref RECEIVER: crossbeam_channel::Receiver<Box<dyn Any + Send + Sync>> = CHANNEL.clone().1;
-}
-
-/// Creates a sender struct
-#[derive(Debug, Copy)]
-pub struct Sender<T: Send + Sync> {
-    data: marker::PhantomData<T>,
-}
-
-unsafe impl<T: Send + Sync> Send for Sender<T> {}
-unsafe impl<T: Send + Sync> Sync for Sender<T> {}
-
-// Manually create the impl so there's no Clone bound on T
-impl<T: Send + Sync> Clone for Sender<T> {
-    fn clone(&self) -> Self {
-        Sender {
-            data: marker::PhantomData,
-        }
-    }
-}
-
-impl<T: 'static + Send + Sync> Sender<T> {
-    /// Sends a message
-    pub fn send(&self, val: T) {
-        SENDER.try_send(Box::new(val)).ok();
-    }
-}
-
-/// Creates a receiver struct
-#[derive(Debug, Copy)]
-pub struct Receiver<T: Send + Sync> {
-    data: marker::PhantomData<T>,
-}
-
-unsafe impl<T: Send + Sync> Send for Receiver<T> {}
-unsafe impl<T: Send + Sync> Sync for Receiver<T> {}
-
-// Manually create the impl so there's no Clone bound on T
-impl<T: Send + Sync> Clone for Receiver<T> {
-    fn clone(&self) -> Self {
-        Receiver {
-            data: marker::PhantomData,
-        }
-    }
-}
-
-impl<T: 'static + Send + Sync> Receiver<T> {
-    /// Receives a message
-    pub fn recv(&self) -> Option<T> {
-        // if let Some(r) = &*RECEIVER {
-        if let Ok(msg) = RECEIVER.try_recv() {
-            if let Ok(message) = msg.downcast() {
-                Some(*message)
-            } else {
-                None
-            }
-        } else {
-            None
-        }
-    }
-}
-
-/// Creates a channel returning a Sender and Receiver structs (mpsc: multiple producer single consumer).
-pub fn channel<T: Send + Sync>() -> (Sender<T>, Receiver<T>) {
-    let s = Sender {
-        data: marker::PhantomData,
-    };
-    let r = Receiver {
-        data: marker::PhantomData,
-    };
-    (s, r)
+    static ref CHANNEL: Chan = crossbeam_channel::unbounded();
 }
 
 pub trait OnEvent<T>
@@ -94,18 +26,25 @@ where
     T: Send + Sync + Clone + 'static,
 {
     fn on_trigger(self, msg: T) -> Self {
-        let (s, _) = channel::<T>();
         self.add_callback(Event::Click, move |_| {
-            s.send(msg.clone());
+            CHANNEL.0.try_send(Box::new(msg.clone())).unwrap();
         });
         self
     }
 }
 
-#[derive(Default)]
 pub struct Settings {
     pub size: (i32, i32),
     pub win_color: Option<enums::Color>,
+}
+
+impl Default for Settings {
+    fn default() -> Self {
+        Self {
+            size: (400, 300),
+            win_color: Some(Color::Rgb(Rgb(250, 250, 250))),
+        }
+    }
 }
 
 pub trait App: Clone {
@@ -129,17 +68,18 @@ pub trait App: Clone {
         }
         self.view();
         win.end();
-        let (_, r) = channel::<Self::Message>();
+        let r = &CHANNEL.1;
         let s = Rc::from(RefCell::from(self.clone()));
         utils::set_interval(30, move || {
-            if let Some(msg) = r.recv() {
-                let mut s = s.borrow_mut();
-                s.update(msg);
-                win.inner().set_inner_html("");
-                win.begin();
-                s.view();
-                win.end();
-                win.redraw();
+            if let Ok(msg) = r.try_recv() {
+                if let Ok(msg) = msg.downcast::<Self::Message>() {
+                    let mut s = s.borrow_mut();
+                    s.update(*msg);
+                    win.clear();
+                    win.begin();
+                    s.view();
+                    win.end();
+                }
             }
         });
     }
