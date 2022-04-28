@@ -2,7 +2,7 @@ use wasm_bindgen::prelude::*;
 use js_sys::Reflect;
 
 pub fn call(method: &str, args: &[&str]) -> Result<JsValue, JsValue> {
-    let obj = web_sys::window().unwrap();
+    let obj = crate::document::Document::window();
     let method: js_sys::Function = Reflect::get(&obj, &method.into())?.into();
     let arguments = js_sys::Array::new();
     for arg in args {
@@ -12,7 +12,7 @@ pub fn call(method: &str, args: &[&str]) -> Result<JsValue, JsValue> {
 }
 
 pub fn post_message(arg: &str) -> Result<JsValue, JsValue> {
-    let obj = web_sys::window().unwrap();
+    let obj = crate::document::Document::window();
     let ipc: JsValue = Reflect::get(&obj, &"ipc".into())?;
     let method: js_sys::Function = Reflect::get(&ipc, &"postMessage".into())?.into();
     let arguments = js_sys::Array::new();
@@ -21,11 +21,11 @@ pub fn post_message(arg: &str) -> Result<JsValue, JsValue> {
 }
 
 pub fn get_variable(name: &str) -> Result<JsValue, JsValue> {
-    let obj = web_sys::window().unwrap();
+    let obj = crate::document::Document::window();
     let name: JsValue = Reflect::get(&obj, &name.into())?;
     Ok(name)
 }
 
 pub fn alert(msg: &str) {
-    web_sys::window().unwrap().alert_with_message(msg).unwrap();
+    crate::document::Document::window().alert_with_message(msg).unwrap_throw();
 }

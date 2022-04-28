@@ -1,5 +1,6 @@
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::JsCast;
+use wasm_bindgen::UnwrapThrowExt;
 
 /**
     Convenience function to convert hex to rgb.
@@ -20,12 +21,12 @@ pub fn set_interval<F: 'static + FnMut()>(timeout_ms: u32, mut cb: F) -> i32 {
     let cb1 = Closure::wrap(Box::new(move || {
         cb();
     }) as Box<dyn FnMut()>);
-    let ret = web_sys::window().expect("No global window found!")
+    let ret = crate::document::Document::window()
         .set_interval_with_callback_and_timeout_and_arguments_0(
             cb1.as_ref().unchecked_ref(),
             timeout_ms as i32,
         )
-        .expect("should register `setTimeout` OK");
+        .expect_throw("should register `setTimeout` OK");
     cb1.forget();
     ret
 }

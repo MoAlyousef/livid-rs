@@ -1,5 +1,6 @@
 use crate::prelude::*;
 use crate::{enums::*, widget::Widget};
+use wasm_bindgen::UnwrapThrowExt;
 
 fn table() -> Widget {
     Widget::new(WidgetType::Table)
@@ -29,10 +30,10 @@ impl TableView {
         for item in data.iter() {
             let tr = tr();
             tb.append(&tr);
-    
+
             for sub in item.iter() {
                 let td = td();
-                td.set_attribute("width", "100").unwrap();
+                td.set_attribute("width", "100").unwrap_throw();
                 td.set_text_content(Some(sub));
                 tr.append(&td);
             }
@@ -44,7 +45,7 @@ impl WidgetBase for TableView {
     fn default() -> Self {
         let inner = table();
         inner.set_style(Style::TextAlign, "center");
-        inner.set_attribute("border", "1").unwrap();
+        inner.set_attribute("border", "1").unwrap_throw();
         crate::group::Group::current_attach(&inner);
         Self { inner }
     }

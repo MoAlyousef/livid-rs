@@ -1,6 +1,7 @@
 use crate::prelude::*;
 use crate::{enums::*, widget::Widget};
 use wasm_bindgen::JsCast;
+use wasm_bindgen::UnwrapThrowExt;
 
 #[derive(Debug, Clone)]
 pub struct Image {
@@ -9,7 +10,7 @@ pub struct Image {
 
 impl Image {
     pub fn set_src(&self, href: &str) {
-        let elem: &web_sys::HtmlImageElement = self.inner.dyn_ref().unwrap();
+        let elem: &web_sys::HtmlImageElement = self.inner.dyn_ref().unwrap_throw();
         elem.set_src(href);
     }
     pub fn with_src(self, href: &str) -> Self {
@@ -17,7 +18,7 @@ impl Image {
         self
     }
     pub fn set_size(&self, w: u32, h: u32) {
-        let elem: &web_sys::HtmlImageElement = self.inner.dyn_ref().unwrap();
+        let elem: &web_sys::HtmlImageElement = self.inner.dyn_ref().unwrap_throw();
         elem.set_width(w);
         elem.set_height(h);
     }

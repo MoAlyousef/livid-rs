@@ -14,8 +14,8 @@ impl Widget {
     /// Create a new Widget
     pub fn new(typ: WidgetType) -> Self {
         let doc = Document::get();
-        let elem = doc.create_element(&typ.to_str()).unwrap();
-        doc.body().unwrap().append_child(&elem).unwrap();
+        let elem = doc.create_element(&typ.to_str()).unwrap_throw();
+        doc.body().unwrap_throw().append_child(&elem).unwrap_throw();
         Self { elem }
     }
     /// Delete a widget
@@ -41,28 +41,28 @@ impl Widget {
         }) as Box<dyn FnMut()>);
         self.elem
             .add_event_listener_with_callback(&event.to_str(), cb1.as_ref().unchecked_ref())
-            .unwrap();
+            .unwrap_throw();
         cb1.forget();
     }
     /// Set a specific style
     pub fn set_style(&self, style: Style, val: &str) {
         let style_elem: web_sys::HtmlStyleElement = JsValue::from(self.elem.clone()).into();
         let css = style_elem.style();
-        css.set_property(style.to_str(), val).unwrap();
+        css.set_property(style.to_str(), val).unwrap_throw();
     }
     /// Get a specific style
     pub fn style(&self, s: Style) -> String {
         let style_elem: web_sys::HtmlStyleElement = JsValue::from(self.elem.clone()).into();
         let css = style_elem.style();
-        css.get_property_value(s.to_str()).unwrap()
+        css.get_property_value(s.to_str()).unwrap_throw()
     }
     /// Append a widget
     pub fn append(&self, other: &Widget) {
-        self.elem.append_child(&other.elem).unwrap();
+        self.elem.append_child(&other.elem).unwrap_throw();
     }
     /// Remove a widget
     pub fn remove(&self, other: &Widget) {
-        self.elem.remove_child(&other.elem).unwrap();
+        self.elem.remove_child(&other.elem).unwrap_throw();
     }
 }
 

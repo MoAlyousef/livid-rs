@@ -1,5 +1,9 @@
-use crate::{enums::*, traits::{WidgetBase, GroupExt}};
+use crate::{
+    enums::*,
+    traits::{GroupExt, WidgetBase},
+};
 use wasm_bindgen::JsCast;
+use wasm_bindgen::UnwrapThrowExt;
 
 /// Defines the methods implemented by all widgets
 pub trait WidgetExt: WidgetBase {
@@ -81,19 +85,19 @@ pub trait WidgetExt: WidgetBase {
     }
     /// Returns the x coordinate of the widget
     fn x(&self) -> i32 {
-        self.inner().style(Style::Left).parse().unwrap()
+        self.inner().style(Style::Left).parse().unwrap_throw()
     }
     /// Returns the y coordinate of the widget
     fn y(&self) -> i32 {
-        self.inner().style(Style::Top).parse().unwrap()
+        self.inner().style(Style::Top).parse().unwrap_throw()
     }
     /// Returns the width of the widget
     fn w(&self) -> i32 {
-        self.inner().style(Style::Width).parse().unwrap()
+        self.inner().style(Style::Width).parse().unwrap_throw()
     }
     /// Returns the height of the widget
     fn h(&self) -> i32 {
-        self.inner().style(Style::Height).parse().unwrap()
+        self.inner().style(Style::Height).parse().unwrap_throw()
     }
     /// Returns the label of the widget
     fn label(&self) -> Option<String> {
@@ -101,7 +105,7 @@ pub trait WidgetExt: WidgetBase {
     }
     /// Returns the widget color
     fn color(&self) -> Color {
-        Color::from_hex_str(&self.inner().style(Style::BackgroundColor)).unwrap()
+        Color::from_hex_str(&self.inner().style(Style::BackgroundColor)).unwrap_throw()
     }
     /// Sets the widget's color
     fn set_color(&self, color: Color) {
@@ -114,13 +118,13 @@ pub trait WidgetExt: WidgetBase {
     }
     /// Returns the widget's label color
     fn label_color(&self) -> Color {
-        Color::from_hex_str(&self.inner().style(Style::Color)).unwrap()
+        Color::from_hex_str(&self.inner().style(Style::Color)).unwrap_throw()
     }
     fn set_label_size(&self, size: u8) {
         self.inner().set_style(Style::FontSize, &size.to_string());
     }
     fn label_size(&self) -> u8 {
-        self.inner().style(Style::FontSize).parse().unwrap()
+        self.inner().style(Style::FontSize).parse().unwrap_throw()
     }
     fn set_label_font(&self, font: &str) {
         self.inner().set_style(Style::Font, font);
@@ -131,21 +135,21 @@ pub trait WidgetExt: WidgetBase {
     /// do callback
     fn do_callback(&self, event: Event) {
         let c = self.inner();
-        let elem: &web_sys::EventTarget = c.dyn_ref().unwrap();
-        elem.dispatch_event(&web_sys::Event::new(&event.to_str()).unwrap())
-            .unwrap();
+        let elem: &web_sys::EventTarget = c.dyn_ref().unwrap_throw();
+        elem.dispatch_event(&web_sys::Event::new(&event.to_str()).unwrap_throw())
+            .unwrap_throw();
     }
     fn set_margin(&self, size: i32) {
         self.inner().set_style(Style::Margin, &size.to_string());
     }
     fn margin(&self) -> i32 {
-        self.inner().style(Style::Margin).parse().unwrap()
+        self.inner().style(Style::Margin).parse().unwrap_throw()
     }
     fn set_padding(&self, size: i32) {
         self.inner().set_style(Style::Padding, &size.to_string());
     }
     fn padding(&self) -> i32 {
-        self.inner().style(Style::Padding).parse().unwrap()
+        self.inner().style(Style::Padding).parse().unwrap_throw()
     }
     fn set_frame(&self, frame: FrameType) {
         match frame {
@@ -174,7 +178,7 @@ pub trait WidgetExt: WidgetBase {
     }
     fn parent(&self) -> Option<Box<dyn GroupExt>> {
         if let Some(parent) = self.inner().parent_element() {
-            Some(Box::new(unsafe { 
+            Some(Box::new(unsafe {
                 crate::group::Group::from_widget(&crate::widget::Widget::from_elem(parent))
             }))
         } else {

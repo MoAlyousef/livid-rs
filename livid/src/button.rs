@@ -1,6 +1,7 @@
 use crate::prelude::{WidgetBase, WidgetExt};
 use crate::{enums::*, widget::Widget};
 use wasm_bindgen::JsCast;
+use wasm_bindgen::UnwrapThrowExt;
 
 #[derive(Debug, Clone)]
 pub struct Button {
@@ -9,11 +10,11 @@ pub struct Button {
 
 impl Button {
     pub fn disabled(&self) -> bool {
-        let elem: &web_sys::HtmlButtonElement = self.inner.dyn_ref().unwrap();
+        let elem: &web_sys::HtmlButtonElement = self.inner.dyn_ref().unwrap_throw();
         elem.disabled()
     }
     pub fn set_disabled(&self, val: bool) {
-        let elem: &web_sys::HtmlButtonElement = self.inner.dyn_ref().unwrap();
+        let elem: &web_sys::HtmlButtonElement = self.inner.dyn_ref().unwrap_throw();
         elem.set_disabled(val);
     }
 }
@@ -45,7 +46,7 @@ pub struct RadioButton {
 impl RadioButton {
     pub fn set_name(&self, name: &str) {
         if let Some(btn) = self.inner.first_element_child() {
-            btn.set_attribute("name", name).unwrap();
+            btn.set_attribute("name", name).unwrap_throw();
         }
     }
     pub fn with_name(self, name: &str) -> Self {
@@ -54,7 +55,7 @@ impl RadioButton {
     }
     pub fn checked(&self) -> bool {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap_throw();
             elem.checked()
         } else {
             false
@@ -62,13 +63,13 @@ impl RadioButton {
     }
     pub fn set_checked(&self, val: bool) {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap_throw();
             elem.set_checked(val);
         }
     }
     pub fn disabled(&self) -> bool {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap_throw();
             elem.disabled()
         } else {
             false
@@ -76,7 +77,7 @@ impl RadioButton {
     }
     pub fn set_disabled(&self, val: bool) {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap_throw();
             elem.set_disabled(val);
         }
     }
@@ -86,7 +87,7 @@ impl WidgetBase for RadioButton {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Div);
         let btn = Widget::new(WidgetType::Input);
-        btn.set_attribute("type", "radio").unwrap();
+        btn.set_attribute("type", "radio").unwrap_throw();
         let label = Widget::new(WidgetType::Label);
         inner.append(&btn);
         inner.append(&label);
@@ -120,7 +121,7 @@ pub struct CheckButton {
 impl CheckButton {
     pub fn set_name(&self, name: &str) {
         if let Some(btn) = self.inner.first_element_child() {
-            btn.set_attribute("name", name).unwrap();
+            btn.set_attribute("name", name).unwrap_throw();
         }
     }
     pub fn with_name(self, name: &str) -> Self {
@@ -129,7 +130,7 @@ impl CheckButton {
     }
     pub fn checked(&self) -> bool {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap_throw();
             elem.checked()
         } else {
             false
@@ -137,13 +138,13 @@ impl CheckButton {
     }
     pub fn set_checked(&self, val: bool) {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap_throw();
             elem.set_checked(val);
         }
     }
     pub fn disabled(&self) -> bool {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap_throw();
             elem.disabled()
         } else {
             false
@@ -151,7 +152,7 @@ impl CheckButton {
     }
     pub fn set_disabled(&self, val: bool) {
         if let Some(btn) = self.inner.first_element_child() {
-            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap();
+            let elem: &web_sys::HtmlInputElement = btn.dyn_ref().unwrap_throw();
             elem.set_disabled(val);
         }
     }
@@ -161,7 +162,7 @@ impl WidgetBase for CheckButton {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Div);
         let btn = Widget::new(WidgetType::Input);
-        btn.set_attribute("type", "checkbox").unwrap();
+        btn.set_attribute("type", "checkbox").unwrap_throw();
         let label = Widget::new(WidgetType::Label);
         inner.append(&btn);
         inner.append(&label);
