@@ -1,7 +1,6 @@
 use livid::{enums::*, prelude::*, *};
 
 fn main() {
-    window::Window::default_fill();
     let inp = input::Input::default();
     let btn1 = button::Button::default().with_label("add two");
     let btn2 = button::Button::default().with_label("add three");

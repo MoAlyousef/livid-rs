@@ -15,11 +15,7 @@ pub trait WidgetBase {
     {
         let s = Self::default();
         s.inner().set_text_content(title.into());
-        if crate::window::Window::has_window() {
-            s.inner().set_style(Style::Position, "relative");
-        } else {
-            s.inner().set_style(Style::Position, "absolute");
-        }
+        s.inner().set_style(Style::Position, "absolute");
         s.inner().set_style(Style::Left, &x.to_string());
         s.inner().set_style(Style::Top, &y.to_string());
         s.inner().set_style(Style::Width, &w.to_string());

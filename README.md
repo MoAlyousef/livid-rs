@@ -81,8 +81,6 @@ fn btn(action: Action) -> button::Button {
 }
 
 fn main() {
-    let win = window::Window::default().with_size(400, 300);
-    win.set_color(Color::Rgb(Rgb(250, 250, 250)));
     let col = group::Column::default_fill();
     col.set_justify_content(AlignContent::Center);
     btn(Action::Increment(1));
@@ -91,7 +89,6 @@ fn main() {
     f.set_label_size(20);
     btn(Action::Decrement(1));
     col.end();
-    win.end();
 }
 ```
 

@@ -27,6 +27,10 @@ impl Widget {
     pub fn from_elem(elem: web_sys::Element) -> Self {
         Self { elem }
     }
+    /// Create a new widget from an existing Element
+    pub fn elem(&self) -> web_sys::Element {
+        self.elem.clone()
+    }
     /// Create a widget struct from an id
     pub fn from_id(id: &str) -> Option<Self> {
         Document::get()

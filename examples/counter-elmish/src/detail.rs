@@ -60,9 +60,8 @@ pub trait App: Clone {
         let (w, h) = settings.size;
         let w = if w == 0 { 400 } else { w };
         let h = if h == 0 { 300 } else { h };
-        let win = window::Window::default()
-            .with_size(w, h)
-            .with_label(&self.title());
+        let win = group::Group::default().with_size(w, h);
+        document::Document::get().set_title(&self.title());
         if let Some(color) = settings.win_color {
             win.set_color(color);
         }

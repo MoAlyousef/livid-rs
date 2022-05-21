@@ -11,9 +11,7 @@ fn create_table() -> table::TableView {
 }
 
 fn main() {
-    // document::Document::add_css_link("https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css");
-    let win = window::Window::default_fill();
-    win.set_color(Color::Rgb(Rgb(240, 240, 240)));
+    document::Document::add_css_link("https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css");
     let choice = menu::MenuBar::default();
     let link = choice.add_choice("Home");
     link.set_href("#here");
@@ -41,6 +39,4 @@ fn main() {
     
     create_table();
     row.end();
-
-    win.end();
 }

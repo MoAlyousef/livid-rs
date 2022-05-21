@@ -1,6 +1,6 @@
 use crate::prelude::*;
 use crate::{enums::*, widget::Widget};
-use wasm_bindgen::JsValue;
+use wasm_bindgen::{JsValue, JsCast};
 
 #[derive(Debug, Clone)]
 pub struct Link {
@@ -61,3 +61,45 @@ impl WidgetBase for Break {
 }
 
 impl WidgetExt for Break {}
+
+#[derive(Debug, Clone)]
+pub struct Canvas {
+    inner: Widget,
+}
+
+pub type CanvasContext = web_sys::CanvasRenderingContext2d;
+
+impl Canvas {
+    pub fn draw<F: 'static + FnMut(CanvasContext)>(&self, mut cb: F) {
+        let inner = self.inner.elem().clone();
+        let canvas: web_sys::HtmlCanvasElement = inner
+            .dyn_into::<web_sys::HtmlCanvasElement>()
+            .map_err(|_| ())
+            .unwrap();
+        let context = canvas
+            .get_context("2d")
+            .unwrap()
+            .unwrap()
+            .dyn_into::<web_sys::CanvasRenderingContext2d>()
+            .unwrap();
+        cb(context)
+    }
+}
+
+impl WidgetBase for Canvas {
+    fn default() -> Self {
+        let inner = Widget::new(WidgetType::Canvas);
+        crate::group::Group::current_attach(&inner);
+        Self { inner }
+    }
+    unsafe fn from_widget(widget: &Widget) -> Self {
+        Self {
+            inner: widget.clone(),
+        }
+    }
+    fn inner(&self) -> Widget {
+        self.inner.clone()
+    }
+}
+
+impl WidgetExt for Canvas {}
