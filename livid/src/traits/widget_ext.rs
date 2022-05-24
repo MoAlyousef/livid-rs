@@ -93,11 +93,11 @@ pub trait WidgetExt: WidgetBase {
     }
     /// Returns the width of the widget
     fn w(&self) -> i32 {
-        self.inner().style(Style::Width).parse().unwrap_throw()
+        self.inner().client_width()
     }
     /// Returns the height of the widget
     fn h(&self) -> i32 {
-        self.inner().style(Style::Height).parse().unwrap_throw()
+        self.inner().client_height()
     }
     /// Returns the label of the widget
     fn label(&self) -> Option<String> {

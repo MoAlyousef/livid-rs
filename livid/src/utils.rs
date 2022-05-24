@@ -1,6 +1,7 @@
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::UnwrapThrowExt;
+use wasm_bindgen::JsValue;
 
 /**
     Convenience function to convert hex to rgb.
@@ -29,4 +30,8 @@ pub fn set_interval<F: 'static + FnMut()>(timeout_ms: u32, mut cb: F) -> i32 {
         .expect_throw("should register `setTimeout` OK");
     cb1.forget();
     ret
+}
+
+pub fn btoa(s: &str) -> Result<String, JsValue> {
+    crate::document::Document::window().btoa(s)
 }

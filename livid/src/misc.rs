@@ -1,6 +1,8 @@
 use crate::prelude::*;
 use crate::{enums::*, widget::Widget};
 use wasm_bindgen::{JsValue, JsCast};
+use wasm_bindgen::UnwrapThrowExt;
+use wasm_bindgen::closure::Closure;
 
 #[derive(Debug, Clone)]
 pub struct Link {
@@ -70,7 +72,7 @@ pub struct Canvas {
 pub type CanvasContext = web_sys::CanvasRenderingContext2d;
 
 impl Canvas {
-    pub fn draw<F: 'static + FnMut(CanvasContext)>(&self, mut cb: F) {
+    pub fn draw<F: 'static + FnMut(&Self, CanvasContext)>(&self, mut cb: F) {
         let inner = self.inner.elem().clone();
         let canvas: web_sys::HtmlCanvasElement = inner
             .dyn_into::<web_sys::HtmlCanvasElement>()
@@ -82,7 +84,7 @@ impl Canvas {
             .unwrap()
             .dyn_into::<web_sys::CanvasRenderingContext2d>()
             .unwrap();
-        cb(context)
+        cb(self, context)
     }
 }
 
@@ -103,3 +105,21 @@ impl WidgetBase for Canvas {
 }
 
 impl WidgetExt for Canvas {}
+
+impl SvgDrawer for CanvasContext {
+    fn draw_svg(&self, svg: &str, x: f64, y: f64, w: f64, h: f64) {
+        let bt = crate::utils::btoa(svg).unwrap();
+        let svg = String::from("data:image/svg+xml;base64,") + &bt;
+        let doc = crate::document::Document::get();
+        let img = doc.create_element("IMG").unwrap_throw();
+        let img: &web_sys::HtmlImageElement = img.dyn_ref().unwrap_throw();
+        let ctx = self.clone();
+        let imgg = img.clone();
+        let cb1 = Closure::wrap(Box::new(move || {
+            ctx.draw_image_with_html_image_element_and_dw_and_dh(&imgg, x, y, w, h).unwrap_throw();
+        }) as Box<dyn FnMut()>);
+        img.set_onload(Some(cb1.as_ref().unchecked_ref()));
+        img.set_src(&svg);
+        cb1.forget();
+    }
+}
