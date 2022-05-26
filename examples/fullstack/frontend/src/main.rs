@@ -1,13 +1,15 @@
 use livid::{enums::*, prelude::*, *};
 
 fn main() {
+    let col = group::Column::default();
     let inp = input::Input::default();
     let btn1 = button::Button::default().with_label("add two");
     let btn2 = button::Button::default().with_label("add three");
     let btn3 = button::Button::default().with_label("Get global val");
     let quit_btn = button::Button::default().with_label("quit");
     frame::Frame::default().with_id("result");
-
+    col.end();
+    
     btn1.add_callback(Event::Click, {
         let inp = inp.clone();
         move |_| {
