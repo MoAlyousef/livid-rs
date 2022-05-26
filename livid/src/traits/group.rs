@@ -1,14 +1,13 @@
-use crate::traits::IsElementIterable;
 use crate::traits::widget_base::WidgetBase;
 use crate::enums::{AlignContent, Style};
 use crate::traits::WidgetExt;
 
 pub trait GroupExt: WidgetExt {
     fn begin(&self) {
-        crate::group::Group::group_begin(&self.inner());
+        self.inner().begin()
     }
     fn end(&self) {
-        crate::group::Group::group_end();
+        self.inner().end()
     }
     fn clear(&self) {
         self.inner().set_inner_html("");

@@ -1,42 +1,14 @@
 use crate::prelude::{GroupExt, WidgetBase, WidgetExt};
 use crate::{enums::*, widget::Widget};
-use std::cell::RefCell;
-// use wasm_bindgen::JsValue;
-
-thread_local! {
-    static PARENTS: RefCell<Vec<Widget>> = RefCell::from(vec![]);
-}
 
 pub struct Group {
     inner: Widget,
 }
 
-impl Group {
-    pub fn current_attach(w: &Widget) {
-        PARENTS.with(|p| {
-            if let Some(last) = p.borrow().last() {
-                last.append(w);
-            }
-        });
-    }
-    pub fn set_current(w: &Widget) {
-        PARENTS.with(|p| {
-            p.borrow_mut().push(w.clone());
-        });
-    }
-    pub fn group_begin(w: &Widget) {
-        PARENTS.with(|p| p.borrow_mut().push(w.clone()));
-    }
-    pub fn group_end() {
-        PARENTS.with(|p| p.borrow_mut().pop());
-    }
-}
-
 impl WidgetBase for Group {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Div);
-        Group::current_attach(&inner);
-        Group::set_current(&inner);
+        inner.begin();
         Self { inner }
     }
 
@@ -65,8 +37,7 @@ impl WidgetBase for Column {
         inner.set_style(Style::Display, "flex");
         inner.set_style(Style::FlexDirection, "column");
         inner.set_style(Style::AlignContent, "space-between");
-        Group::current_attach(&inner);
-        Group::set_current(&inner);
+        inner.begin();
         Self { inner }
     }
 
@@ -95,8 +66,7 @@ impl WidgetBase for Row {
         inner.set_style(Style::Display, "flex");
         inner.set_style(Style::FlexDirection, "row");
         inner.set_style(Style::AlignContent, "space-between");
-        Group::current_attach(&inner);
-        Group::set_current(&inner);
+        inner.begin();
         Self { inner }
     }
 

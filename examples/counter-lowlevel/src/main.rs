@@ -24,13 +24,11 @@ fn btn(i: i32) -> widget::Widget {
 
 fn main() {
     document::Document::get().set_title("Counter");
-
-    let btn_inc = btn(1);
-    let btn_dec = btn(-1);
-
     let main_div = div();
-    main_div.append(&btn_inc);
-    main_div.append(&btn_dec);
+    main_div.begin();
+    btn(1);
+    btn(-1);
+    main_div.end();
 
     let result = div();
     result.set_id("result");

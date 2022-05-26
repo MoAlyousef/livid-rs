@@ -1,8 +1,15 @@
 use crate::document::Document;
 use crate::enums::*;
+use crate::traits::IsElementIterable;
 use std::ops::{Deref, DerefMut};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
+use wasm_bindgen::UnwrapThrowExt;
+use std::cell::RefCell;
+
+thread_local! {
+    pub(crate) static PARENTS: RefCell<Vec<Widget>> = RefCell::from(vec![crate::widget::Widget::from_elem(Document::get().body().unwrap_throw().into())]);
+}
 
 #[derive(Debug, Clone)]
 /// An Html Element wrapper
@@ -15,7 +22,11 @@ impl Widget {
     pub fn new(typ: WidgetType) -> Self {
         let doc = Document::get();
         let elem = doc.create_element(&typ.to_str()).unwrap_throw();
-        doc.body().unwrap_throw().append_child(&elem).unwrap_throw();
+        PARENTS.with(|p| {
+            if let Some(last) = p.borrow().last() {
+                last.append_child(&elem).unwrap_throw();
+            }
+        });
         Self { elem }
     }
     /// Delete a widget
@@ -67,6 +78,44 @@ impl Widget {
     /// Remove a widget
     pub fn remove(&self, other: &Widget) {
         self.elem.remove_child(&other.elem).unwrap_throw();
+    }
+    pub fn as_elem<T: JsCast>(&self) -> Option<&T> {
+        self.elem.dyn_ref()
+    }
+    pub fn begin(&self) {
+        PARENTS.with(|p| p.borrow_mut().push(self.clone()));
+    }
+    pub fn end(&self) {
+        PARENTS.with(|p| p.borrow_mut().pop());
+    }
+    pub fn clear(&self) {
+        self.set_inner_html("");
+    }
+    pub fn set_align_content(&self, align: AlignContent) {
+        self.set_style(Style::AlignContent, align.to_str());
+    }
+    pub fn set_justify_content(&self, align: AlignContent) {
+        self.set_style(Style::JustifyContent, align.to_str());
+    }
+    pub fn children(&self) -> Vec<Widget> {
+        let mut v: Vec<Widget> = vec![];
+        let c = self.elem.children();
+        for e in c.iter() {
+            v.push(e.to_owned());
+        }
+        v
+    }
+    pub fn parent(&self) -> Option<Widget> {
+        if let Some(elem) = self.parent_element() {
+            Some(Widget::from_elem(elem))
+        } else {
+            None
+        }
+    }
+    pub fn do_callback(&self, event: Event) {
+        let elem: &web_sys::EventTarget = self.dyn_ref().unwrap_throw();
+        elem.dispatch_event(&web_sys::Event::new(&event.to_str()).unwrap_throw())
+            .unwrap_throw();
     }
 }
 

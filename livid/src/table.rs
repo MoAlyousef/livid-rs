@@ -46,7 +46,6 @@ impl WidgetBase for TableView {
         let inner = table();
         inner.set_style(Style::TextAlign, "center");
         inner.set_attribute("border", "1").unwrap_throw();
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
 

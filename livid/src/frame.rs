@@ -10,7 +10,6 @@ impl WidgetBase for Frame {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Div);
         inner.set_style(Style::TextAlign, "center");
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
 
@@ -34,7 +33,6 @@ pub struct Label {
 impl WidgetBase for Label {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Div);
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
 

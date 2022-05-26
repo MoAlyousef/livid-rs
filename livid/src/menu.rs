@@ -18,7 +18,6 @@ impl WidgetBase for Choice {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Select);
         inner.set_style(Style::TextAlign, "center");
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
 
@@ -69,7 +68,6 @@ impl WidgetBase for NavBar {
         inner.set_style(Style::Padding, "0");
         inner.set_style(Style::Width, "200px");
         inner.set_style(Style::BackgroundColor, "#f1f1f1");
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
 
@@ -127,7 +125,6 @@ impl WidgetBase for MenuBar {
         inner.set_style(Style::Overflow, "hidden");
         inner.set_style(Style::Border, "1px solid #e7e7e7");
         inner.set_style(Style::BackgroundColor, "#f1f1f1");
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
 

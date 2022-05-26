@@ -22,7 +22,6 @@ impl Button {
 impl WidgetBase for Button {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Button);
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
 
@@ -91,7 +90,6 @@ impl WidgetBase for RadioButton {
         let label = Widget::new(WidgetType::Label);
         inner.append(&btn);
         inner.append(&label);
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
 
@@ -166,7 +164,6 @@ impl WidgetBase for CheckButton {
         let label = Widget::new(WidgetType::Label);
         inner.append(&btn);
         inner.append(&label);
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
 

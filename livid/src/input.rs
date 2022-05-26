@@ -9,7 +9,6 @@ pub struct Input {
 impl WidgetBase for Input {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Input);
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
 
@@ -36,7 +35,6 @@ impl WidgetBase for TextArea {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Textarea);
         inner.set_style(Style::Resize, "none");
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
 

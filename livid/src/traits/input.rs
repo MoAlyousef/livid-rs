@@ -6,13 +6,69 @@ use wasm_bindgen::UnwrapThrowExt;
 pub trait InputExt: WidgetExt {
     fn value(&self) -> String {
         let c = self.inner();
-        let elem: &web_sys::HtmlInputElement = c.dyn_ref().unwrap_throw();
-        elem.clone().value()
+        let tag = c.tag_name();
+        if tag == "INPUT" {
+            let elem = c.dyn_ref::<web_sys::HtmlInputElement>().unwrap_throw();
+            elem.clone().value()
+        } else {
+            let elem = c.dyn_ref::<web_sys::HtmlTextAreaElement>().unwrap_throw();
+            elem.clone().value()
+        }
     }
     fn set_value(&self, s: &str) {
         let c = self.inner();
-        let elem: &web_sys::HtmlInputElement = c.dyn_ref().unwrap_throw();
-        elem.set_value(s);
+        let tag = c.tag_name();
+        if tag == "INPUT" {
+            let elem = c.dyn_ref::<web_sys::HtmlInputElement>().unwrap_throw();
+            elem.set_value(s)
+        } else {
+            let elem = c.dyn_ref::<web_sys::HtmlTextAreaElement>().unwrap_throw();
+            elem.set_value(s)
+        }
+    }
+    fn placeholder(&self) -> String {
+        let c = self.inner();
+        let tag = c.tag_name();
+        if tag == "INPUT" {
+            let elem = c.dyn_ref::<web_sys::HtmlInputElement>().unwrap_throw();
+            elem.clone().placeholder()
+        } else {
+            let elem = c.dyn_ref::<web_sys::HtmlTextAreaElement>().unwrap_throw();
+            elem.clone().placeholder()
+        }
+    }
+    fn set_placeholder(&self, s: &str) {
+        let c = self.inner();
+        let tag = c.tag_name();
+        if tag == "INPUT" {
+            let elem = c.dyn_ref::<web_sys::HtmlInputElement>().unwrap_throw();
+            elem.set_placeholder(s)
+        } else {
+            let elem = c.dyn_ref::<web_sys::HtmlTextAreaElement>().unwrap_throw();
+            elem.set_placeholder(s)
+        }
+    }
+    fn readonly(&self) -> bool {
+        let c = self.inner();
+        let tag = c.tag_name();
+        if tag == "INPUT" {
+            let elem = c.dyn_ref::<web_sys::HtmlInputElement>().unwrap_throw();
+            elem.clone().read_only()
+        } else {
+            let elem = c.dyn_ref::<web_sys::HtmlTextAreaElement>().unwrap_throw();
+            elem.clone().read_only()
+        }
+    }
+    fn set_readonly(&self, val: bool) {
+        let c = self.inner();
+        let tag = c.tag_name();
+        if tag == "INPUT" {
+            let elem = c.dyn_ref::<web_sys::HtmlInputElement>().unwrap_throw();
+            elem.set_read_only(val)
+        } else {
+            let elem = c.dyn_ref::<web_sys::HtmlTextAreaElement>().unwrap_throw();
+            elem.set_read_only(val)
+        }
     }
     /// Sets the widget's color
     fn set_text_color(&self, color: Color) {

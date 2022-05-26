@@ -41,8 +41,7 @@ impl WidgetBase for Window {
         middle.append(&inner);
         inner.set_style(Style::MarginLeft, "auto");
         inner.set_style(Style::MarginRight, "auto");
-        crate::group::Group::current_attach(&inner);
-        crate::group::Group::set_current(&inner);
+        inner.begin();
         HAS_WINDOW.store(true, Ordering::Relaxed);
         Self { inner }
     }

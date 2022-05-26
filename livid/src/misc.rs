@@ -23,7 +23,6 @@ impl Link {
 impl WidgetBase for Link {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::A);
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
 
@@ -49,7 +48,6 @@ pub struct Break {
 impl WidgetBase for Break {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Br);
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
     unsafe fn from_widget(widget: &Widget) -> Self {
@@ -91,7 +89,6 @@ impl Canvas {
 impl WidgetBase for Canvas {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Canvas);
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
     unsafe fn from_widget(widget: &Widget) -> Self {

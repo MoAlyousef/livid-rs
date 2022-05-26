@@ -16,7 +16,7 @@ fn main() {
     link.add_callback(Event::MouseOver, |l| l.set_color(Color::Red));
     choice.add_choice("321");
     let canvas = misc::Canvas::default();
-    canvas.draw(|context| {
+    canvas.draw(|_canvas, context| {
         use std::f64;
         context.begin_path();
     

@@ -31,7 +31,6 @@ impl Image {
 impl WidgetBase for Image {
     fn default() -> Self {
         let inner = Widget::new(WidgetType::Img);
-        crate::group::Group::current_attach(&inner);
         Self { inner }
     }
 

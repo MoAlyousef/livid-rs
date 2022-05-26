@@ -1,5 +1,5 @@
 use livid::prelude::*;
-use livid::{enums::*, group::Group, widget::Widget};
+use livid::{enums::*, widget::Widget};
 
 #[derive(Debug, Clone)]
 pub struct MyMenuBar {
@@ -42,7 +42,7 @@ impl WidgetBase for MyMenuBar {
         inner.set_style(Style::Overflow, "hidden");
         inner.set_style(Style::Border, "1px solid #e7e7e7");
         inner.set_style(Style::BackgroundColor, "#f1f1f1");
-        Group::current_attach(&inner);
+        inner.begin();
         Self { inner }
     }
     unsafe fn from_widget(widget: &Widget) -> Self {

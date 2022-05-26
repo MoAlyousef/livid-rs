@@ -1,6 +1,6 @@
 [package]
 name = "livid"
-version = "0.2.11"
+version = "0.2.12"
 edition = "2021"
 description = "livid is a lightweight frontend Rust crate for creating web apps via webassembly"
 license = "MIT"
@@ -17,5 +17,5 @@ web-sys = { version = "0.3", features= [
         "Element", "Event", "EventTarget", "HtmlElement", 
         "HtmlStyleElement", "Node", "HtmlBodyElement", 
         "Window", "Document", "CssStyleDeclaration", "HtmlCollection",
-        "HtmlHeadElement", "HtmlLinkElement", "console", "HtmlInputElement",
+        "HtmlHeadElement", "HtmlLinkElement", "console", "HtmlInputElement", "HtmlTextAreaElement",
         "HtmlButtonElement", "HtmlImageElement", "CanvasRenderingContext2d", "HtmlCanvasElement" ] }
