@@ -1,20 +1,4 @@
-use livid::{widget::Widget, enums::*};
-
-fn ul() -> Widget {
-    Widget::new(WidgetType::Ul)
-}
-
-fn li() -> Widget {
-    Widget::new(WidgetType::Li)
-}
-
-fn svg() -> Widget {
-    Widget::new(WidgetType::Svg)
-}
-
-fn div() -> Widget {
-    Widget::new(WidgetType::Div)
-}
+use livid::{enums::*, widgets::*};
 
 fn main() {
     let ul = ul();

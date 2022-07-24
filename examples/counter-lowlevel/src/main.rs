@@ -1,11 +1,8 @@
-use livid::{enums::*, prelude::*, *};
-
-fn div() -> widget::Widget {
-    widget::Widget::new(WidgetType::Div)
-}
+use livid::{enums::*, prelude::*, *, widgets::*};
 
 fn btn(i: i32) -> widget::Widget {
-    let btn = widget::Widget::new(WidgetType::Button);
+    // this is akin to calling `widget::Widget::new(WidgetType::Button)`
+    let btn = button();
     let (label, col) = if i > 0 {
         ("Increment", "Green")
     } else {

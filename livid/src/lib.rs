@@ -259,4 +259,5 @@ pub mod table;
 mod traits;
 pub mod utils;
 pub mod widget;
+pub mod widgets;
 pub mod window;

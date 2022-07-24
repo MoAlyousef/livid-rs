@@ -1,12 +1,9 @@
 use livid::{
     document::Document,
-    enums::{Event, WidgetType::{self, *}},
+    enums::Event,
     widget::Widget,
+    widgets::*,
 };
-
-fn w(typ: WidgetType) -> Widget {
-    Widget::new(typ)
-}
 
 fn expand_burger(_: &Widget) {
     let nav_menu = Widget::from_id("navmenu").unwrap();
@@ -19,16 +16,16 @@ fn expand_burger(_: &Widget) {
 }
 
 fn create_navbar() {
-    let n = w(Nav);
+    let n = nav();
     n.set_class_name("navbar bd-navbar");
     n.append(&{
-        let d = w(Div);
+        let d = div();
         d.set_class_name("navbar-brand");
         d.append(&{
-            let a = w(A);
+            let a = a();
             a.set_class_name("navbar-item");
             // a.append(&{
-            //     let i = w(Img);
+            //     let i = img();
             //     i.set_attribute("src", "assets/brand.png");
             //     i
             // });
@@ -36,11 +33,11 @@ fn create_navbar() {
             a
         });
         d.append(&{
-            let a = w(A);
+            let a = a();
             a.set_class_name("navbar-burger");
-            a.append(&{ w(Span) });
-            a.append(&{ w(Span) });
-            a.append(&{ w(Span) });
+            a.append(&{ span() });
+            a.append(&{ span() });
+            a.append(&{ span() });
             a.set_attribute("data-target", "navmenu").unwrap();
             a.add_callback(Event::Click, expand_burger);
             a
@@ -48,42 +45,42 @@ fn create_navbar() {
         d
     });
     n.append(&{
-        let d = w(Div);
+        let d = div();
         d.set_id("navmenu");
         d.set_class_name("navbar-menu");
         d.append(&{
-            let d = w(Div);
+            let d = div();
             d.set_class_name("navbar-start");
             d.append(&{
-                let a = w(A);
+                let a = a();
                 a.set_class_name("navbar-item");
                 a.set_text_content(Some("Home"));
                 // a.add_callback();
                 a
             });
             d.append(&{
-                let a = w(A);
+                let a = a();
                 a.set_class_name("navbar-item");
                 a.set_text_content(Some("Projects"));
                 // a.add_callback();
                 a
             });
             d.append(&{
-                let a = w(A);
+                let a = a();
                 a.set_class_name("navbar-item");
                 a.set_text_content(Some("Contact"));
                 // a.add_callback();
                 a
             });
             d.append(&{
-                let a = w(A);
+                let a = a();
                 a.set_class_name("navbar-item");
                 a.set_text_content(Some("Resume"));
                 // a.add_callback();
                 a
             });
             d.append(&{
-                let a = w(A);
+                let a = a();
                 a.set_class_name("navbar-item");
                 a.set_text_content(Some("About"));
                 // a.add_callback();
@@ -92,7 +89,7 @@ fn create_navbar() {
             d
         });
         d.append(&{
-            let d = w(Div);
+            let d = div();
             d.set_class_name("navbar-end");
             d
         });
@@ -101,58 +98,58 @@ fn create_navbar() {
 }
 
 fn create_form() {
-    let form = w(Form);
+    let form = form();
     form.set_class_name("box");
     form.append(&{
-        let div = w(Div);
-        div.set_class_name("field");
-        div.append(&{
-            let label = w(Label);
+        let d = div();
+        d.set_class_name("field");
+        d.append(&{
+            let label = label();
             label.set_class_name("label");
             label.set_inner_html(r#"<span class='fa fa-email'></span> Email"#);
             label
         });
-        div.append(&{
-            let div = w(Div);
-            div.set_class_name("control");
-            div.append(&{
-                let inp = w(Input);
+        d.append(&{
+            let d = div();
+            d.set_class_name("control");
+            d.append(&{
+                let inp = input();
                 inp.set_class_name("input");
                 inp.set_attribute("type", "email").unwrap();
                 inp.set_attribute("placeholder", "m@gmail.com").unwrap();
                 inp
             });
-            div
+            d
         });
-        div.append(&{
-            let div = w(Div);
-            div.set_class_name("field");
-            div.append(&{
-                let label = w(Label);
+        d.append(&{
+            let d = div();
+            d.set_class_name("field");
+            d.append(&{
+                let label = label();
                 label.set_text_content(Some("Password"));
                 label.append(&{
-                    let div = w(Div);
-                    div.set_class_name("control");
-                    div.append(&{
-                        let inp = w(Input);
+                    let d = div();
+                    d.set_class_name("control");
+                    d.append(&{
+                        let inp = input();
                         inp.set_class_name("input");
                         inp.set_attribute("type", "password").unwrap();
                         inp.set_attribute("placeholder", "**********").unwrap();
                         inp
                     });
-                    div
+                    d
                 });
                 label
             });
-            div
+            d
         });
-        div.append(&{
-            let btn = w(Button);
+        d.append(&{
+            let btn = button();
             btn.set_class_name("button is-primary");
             btn.set_text_content(Some("Sign in"));
             btn
         });
-        div
+        d
     });
 }
 
