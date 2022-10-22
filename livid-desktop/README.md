@@ -19,7 +19,7 @@ fn main() {
         title: "My App",
         fixed: true,
         port: 8080, // the default
-        dist_folder: PathBuf::from("examples/dist"), // the default
+        dist_folder: PathBuf::from("dist"), // the default
         ..Default::default()
     });
     a.run();
