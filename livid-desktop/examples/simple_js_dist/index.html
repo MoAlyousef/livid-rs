@@ -9,9 +9,8 @@
 <body>
   <script>
     function add_func() {
-      var value = parseInt(document.getElementById("val").textContent);
-      value++;
-      document.getElementById("val").textContent = value.toString();
+      var elem = document.getElementById("val");
+      elem.textContent = (parseInt(elem.textContent) + 1).toString();
     }
   </script>
 
