@@ -7,7 +7,7 @@ fn main() {
         h: 400,
         title: "My App",
         fixed: true,
-        dist_folder: PathBuf::from("examples/dist2"),
+        dist_folder: PathBuf::from("examples/dispatch_dist"),
         ..Default::default()
     });
     let mut wv = a.get_webview();

@@ -7,7 +7,7 @@ fn main() {
         h: 400,
         title: "My App",
         fixed: true,
-        dist_folder: PathBuf::from("examples/simple_dist"),
+        dist_folder: PathBuf::from("examples/simple_js_dist"),
         ..Default::default()
     });
     a.run();
