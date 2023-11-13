@@ -46,7 +46,7 @@ pub struct Settings {
     pub w: i32,
     pub h: i32,
     pub title: &'static str,
-    pub port: &'static str,
+    pub port: u16,
     pub fixed: bool,
     pub debug: bool,
     pub dist_folder: PathBuf,
@@ -58,7 +58,7 @@ impl Default for Settings {
             w: 600,
             h: 400,
             title: "app",
-            port: "8080",
+            port: 8080,
             fixed: true,
             debug: false,
             dist_folder: PathBuf::from("dist"),
@@ -81,7 +81,15 @@ impl App {
     pub fn new(settings: Settings) -> Self {
         let mut wv = wv::Webview::create(settings.debug);
         wv.set_title(settings.title);
-        wv.set_size(settings.w, settings.h, if settings.fixed { wv::SizeHint::Fixed } else { wv::SizeHint::None });
+        wv.set_size(
+            settings.w,
+            settings.h,
+            if settings.fixed {
+                wv::SizeHint::Fixed
+            } else {
+                wv::SizeHint::None
+            },
+        );
         #[cfg(target_os = "macos")]
         add_nsmenu();
         Self { wv, settings }
@@ -95,7 +103,9 @@ impl App {
         let port = self.settings.port;
         let dist_folder = self.settings.dist_folder;
         std::thread::spawn(move || {
-            Server::serve(port, &std::env::current_dir().unwrap().join(dist_folder))
+            let mut server = Server::new(port, &std::env::current_dir().unwrap().join(dist_folder));
+            server.static_serve(true);
+            server.serve();
         });
         let addr = format!("http://127.0.0.1:{}", port);
         self.wv.navigate(&addr);

@@ -1,6 +1,6 @@
 [package]
 name = "livid-desktop"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 description = "Lightly wraps a native webview which can be used with livid for the frontend"
 repository = "https://github.com/MoAlyousef/livid-rs"
@@ -14,4 +14,4 @@ license = "MIT"
 
 [dependencies]
 fltk-webview-sys = "0.2.10"
-livid-server = { version = "0.1", path = "../livid-server" }
+livid-server = { version = "0.2", path = "../livid-server" }

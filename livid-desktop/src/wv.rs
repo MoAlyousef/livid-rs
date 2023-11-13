@@ -1,10 +1,10 @@
+use fltk_webview_sys as wv;
 use std::{
     ffi::{CStr, CString},
     mem,
     os::raw,
     sync::Arc,
 };
-use fltk_webview_sys as wv;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
@@ -46,7 +46,9 @@ impl Webview {
     /// Set the window's title
     pub fn set_title(&mut self, title: &str) {
         let title = std::ffi::CString::new(title).unwrap();
-        unsafe { wv::webview_set_title(*self.inner, title.as_ptr() as _); }
+        unsafe {
+            wv::webview_set_title(*self.inner, title.as_ptr() as _);
+        }
     }
 
     /// Get the webview window handle
