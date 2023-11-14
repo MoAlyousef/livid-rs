@@ -89,7 +89,7 @@ pub fn handle_args(bin_name: &str, args: &[String]) {
 
 fn check_prog(prog: &str) -> bool {
     let mut cmd = Command::new(prog);
-    cmd.args(&["--help"]);
+    cmd.args(["--help"]);
     cmd.output().is_ok()
 }
 
@@ -102,7 +102,7 @@ fn help(bin_name: &str) {
 
 fn clean() {
     let mut cargo = Command::new("cargo");
-    cargo.args(&["clean"]);
+    cargo.args(["clean"]);
     cargo.spawn().unwrap().wait().unwrap();
 
     let dist = PathBuf::from("dist");
@@ -114,7 +114,9 @@ fn clean() {
 fn serve(args: &[String]) {
     build(args);
     println!("Livid server running on http://0.0.0.0:8080!\nServing dist/");
-    Server::serve("8080", &std::env::current_dir().unwrap().join("dist"));
+    let mut server = Server::new(8080, &std::env::current_dir().unwrap().join("dist"));
+    server.static_serve(true);
+    server.serve();
 }
 
 fn build(args: &[String]) {
@@ -133,11 +135,11 @@ fn build(args: &[String]) {
     } else {
         path = path.join("debug");
     }
-    path = path.join(&format!("{}.wasm", &crate_name));
+    path = path.join(format!("{}.wasm", &crate_name));
     if !check_prog("wasm-bindgen") {
         eprintln!("wasm-bindgen-cli was not found, running a first-time install...");
         let mut cargo = Command::new("cargo");
-        cargo.args(&["install", "wasm-bindgen-cli"]);
+        cargo.args(["install", "wasm-bindgen-cli"]);
         cargo.spawn().unwrap().wait().unwrap();
     }
     let mut cargo = std::process::Command::new("cargo");
@@ -150,11 +152,11 @@ fn build(args: &[String]) {
     if check_prog("wasm-opt") && release {
         let mut opt = Command::new("wasm-opt");
         let path = format!("{}", path.display());
-        opt.args(&[&path, "-O3", "-o", &path]);
+        opt.args([&path, "-O3", "-o", &path]);
         opt.spawn().unwrap().wait().unwrap();
     }
     let mut wb = Command::new("wasm-bindgen");
-    wb.args(&[
+    wb.args([
         &format!("{}", path.display()),
         "--out-dir",
         "dist",
@@ -226,14 +228,14 @@ fn deploy(bin_name: &str, args: &[String]) {
     if !proj.exists() {
         let mut cargo = Command::new("cargo");
         cargo.current_dir(&temp_dir);
-        cargo.args(&["new", "livid_temp"]);
+        cargo.args(["new", "livid_temp"]);
         cargo.spawn().unwrap().wait().unwrap();
-        std::fs::write(proj.join("src").join("main.rs"), &app).unwrap();
-        std::fs::write(proj.join("Cargo.toml"), &cargo_toml).unwrap();
+        std::fs::write(proj.join("src").join("main.rs"), app).unwrap();
+        std::fs::write(proj.join("Cargo.toml"), cargo_toml).unwrap();
     }
     let mut cargo = Command::new("cargo");
     cargo.current_dir(&proj);
-    cargo.args(&["build", "--release"]);
+    cargo.args(["build", "--release"]);
     cargo.spawn().unwrap().wait().unwrap();
     let cwd = std::env::current_dir().unwrap();
     let bundle = cwd.join("bundle");
