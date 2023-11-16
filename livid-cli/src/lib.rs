@@ -114,8 +114,8 @@ fn clean() {
 fn serve(args: &[String]) {
     build(args);
     println!("Livid server running on http://0.0.0.0:8080!\nServing dist/");
-    let mut server = Server::new(8080, &std::env::current_dir().unwrap().join("dist"));
-    server.static_serve(true);
+    let mut server = Server::new(8080);
+    server.serve_dir(&std::env::current_dir().unwrap().join("dist"));
     server.serve();
 }
 

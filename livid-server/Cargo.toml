@@ -1,6 +1,6 @@
 [package]
 name = "livid-server"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 description = "A simple server for use with livid-desktop and livid-cli"
 repository = "https://github.com/MoAlyousef/livid-rs"

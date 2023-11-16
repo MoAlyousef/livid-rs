@@ -30,25 +30,23 @@ type Routes = HashMap<(Method, String), fn(rq: &mut Request) -> ResponseBox>;
 
 pub struct Server {
     port: u16,
-    root: PathBuf,
-    static_serve: bool,
+    root: Option<PathBuf>,
     routes: Routes,
 }
 
 impl Server {
-    pub fn new<P: AsRef<Path>>(port: u16, root: &P) -> Self {
+    pub fn new(port: u16) -> Self {
         Self {
             port,
-            root: PathBuf::from(root.as_ref()),
-            static_serve: false,
+            root: None,
             routes: HashMap::new(),
         }
     }
+    pub fn serve_dir<P: AsRef<Path>>(&mut self, dir: &P) {
+        self.root = Some(PathBuf::from(dir.as_ref()));
+    }
     pub fn route(&mut self, verb: Method, url: &str, f: fn(rq: &mut Request) -> ResponseBox) {
         self.routes.insert((verb, url.to_string()), f);
-    }
-    pub fn static_serve(&mut self, flag: bool) {
-        self.static_serve = flag;
     }
     pub fn serve(&mut self) {
         let server = ThServer::http(&format!("0.0.0.0:{}", self.port)).unwrap();
@@ -58,13 +56,13 @@ impl Server {
             if let Some(f) = self.routes.get(&(method.clone(), url)) {
                 let resp = f(&mut rq);
                 let _ = rq.respond(resp);
-            } else if self.static_serve && method == Method::Get {
+            } else if self.root.is_some() && method == Method::Get {
                 let mut url = rq.url().to_string().strip_prefix('/').unwrap().to_string();
                 if url.is_empty() {
                     url = "index.html".to_string();
                 }
                 let path = Path::new(&url);
-                let npath = self.root.join(path);
+                let npath = self.root.as_ref().unwrap().join(path);
                 let file = fs::File::open(&npath);
                 if let Ok(file) = file {
                     let response = Response::from_file(file);

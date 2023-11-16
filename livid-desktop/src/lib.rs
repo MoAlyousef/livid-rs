@@ -103,8 +103,8 @@ impl App {
         let port = self.settings.port;
         let dist_folder = self.settings.dist_folder;
         std::thread::spawn(move || {
-            let mut server = Server::new(port, &std::env::current_dir().unwrap().join(dist_folder));
-            server.static_serve(true);
+            let mut server = Server::new(port);
+            server.serve_dir(&std::env::current_dir().unwrap().join(dist_folder));
             server.serve();
         });
         let addr = format!("http://127.0.0.1:{}", port);
