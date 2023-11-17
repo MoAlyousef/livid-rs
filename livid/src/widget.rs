@@ -1,11 +1,11 @@
 use crate::document::Document;
 use crate::enums::*;
 use crate::traits::IsElementIterable;
+use std::cell::RefCell;
 use std::ops::{Deref, DerefMut};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::UnwrapThrowExt;
-use std::cell::RefCell;
 
 thread_local! {
     pub(crate) static PARENTS: RefCell<Vec<Widget>> = RefCell::from(vec![crate::widget::Widget::from_elem(Document::get().body().unwrap_throw().into())]);

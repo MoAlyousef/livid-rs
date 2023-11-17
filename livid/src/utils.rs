@@ -1,7 +1,7 @@
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::JsCast;
-use wasm_bindgen::UnwrapThrowExt;
 use wasm_bindgen::JsValue;
+use wasm_bindgen::UnwrapThrowExt;
 
 /**
     Convenience function to convert hex to rgb.

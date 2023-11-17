@@ -1,5 +1,5 @@
-use crate::widget::Widget;
 use crate::enums::WidgetType;
+use crate::widget::Widget;
 
 pub fn address() -> Widget {
     Widget::new(WidgetType::Address)

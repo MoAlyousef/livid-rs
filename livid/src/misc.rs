@@ -1,8 +1,8 @@
 use crate::prelude::*;
 use crate::{enums::*, widget::Widget};
-use wasm_bindgen::{JsValue, JsCast};
-use wasm_bindgen::UnwrapThrowExt;
 use wasm_bindgen::closure::Closure;
+use wasm_bindgen::UnwrapThrowExt;
+use wasm_bindgen::{JsCast, JsValue};
 
 #[derive(Debug, Clone)]
 pub struct Link {
@@ -113,7 +113,8 @@ impl SvgDrawer for CanvasContext {
         let ctx = self.clone();
         let imgg = img.clone();
         let cb1 = Closure::wrap(Box::new(move || {
-            ctx.draw_image_with_html_image_element_and_dw_and_dh(&imgg, x, y, w, h).unwrap_throw();
+            ctx.draw_image_with_html_image_element_and_dw_and_dh(&imgg, x, y, w, h)
+                .unwrap_throw();
         }) as Box<dyn FnMut()>);
         img.set_onload(Some(cb1.as_ref().unchecked_ref()));
         img.set_src(&svg);

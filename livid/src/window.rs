@@ -17,7 +17,7 @@ impl Window {
         s.inner.set_style(Style::Height, &format!("{}%", y));
         s
     }
-    
+
     /// Check if the document has a main livid window
     pub fn has_window() -> bool {
         HAS_WINDOW.load(std::sync::atomic::Ordering::Relaxed)

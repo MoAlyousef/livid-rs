@@ -1,6 +1,7 @@
 use ascii::AsciiString;
 use std::collections::HashMap;
 use std::fs;
+use std::io::Write;
 use std::path::{Path, PathBuf};
 use tiny_http::{Header, Method, Request, Response, ResponseBox, Server as ThServer, StatusCode};
 
@@ -31,6 +32,7 @@ type Routes = HashMap<(Method, String), fn(rq: &mut Request) -> ResponseBox>;
 pub struct Server {
     port: u16,
     root: Option<PathBuf>,
+    output: Option<Box<dyn Write>>,
     routes: Routes,
 }
 
@@ -39,11 +41,15 @@ impl Server {
         Self {
             port,
             root: None,
+            output: None,
             routes: HashMap::new(),
         }
     }
     pub fn serve_dir<P: AsRef<Path>>(&mut self, dir: &P) {
         self.root = Some(PathBuf::from(dir.as_ref()));
+    }
+    pub fn log_output(&mut self, o: Box<dyn std::io::Write>) {
+        self.output = Some(o);
     }
     pub fn route(&mut self, verb: Method, url: &str, f: fn(rq: &mut Request) -> ResponseBox) {
         self.routes.insert((verb, url.to_string()), f);
@@ -51,6 +57,11 @@ impl Server {
     pub fn serve(&mut self) {
         let server = ThServer::http(&format!("0.0.0.0:{}", self.port)).unwrap();
         while let Ok(mut rq) = server.recv() {
+            if let Some(output) = self.output.as_mut() {
+                let v = rq.http_version();
+                let ra = rq.remote_addr().unwrap();
+                output.write_all(format!("{:?} - [{}] - \"{} {} HTTP/{}.{}\"", ra.ip(), httpdate::HttpDate::from(std::time::SystemTime::now()), rq.method(), rq.url(), v.0, v.1).as_bytes()).unwrap();
+            }
             let method = rq.method().clone();
             let url = rq.url().to_string();
             if let Some(f) = self.routes.get(&(method.clone(), url)) {
@@ -64,16 +75,24 @@ impl Server {
                 let path = Path::new(&url);
                 let npath = self.root.as_ref().unwrap().join(path);
                 let file = fs::File::open(&npath);
-                if let Ok(file) = file {
+                let code = if let Ok(file) = file {
                     let response = Response::from_file(file);
                     let response = response.with_header(Header {
                         field: "Content-Type".parse().unwrap(),
                         value: AsciiString::from_ascii(get_content_type(path)).unwrap(),
                     });
+                    let code = response.status_code();
                     let _ = rq.respond(response);
+                    code
                 } else {
-                    let rep = Response::new_empty(StatusCode(404));
-                    let _ = rq.respond(rep);
+                    let response = Response::new_empty(StatusCode(404));
+                    let code = response.status_code();
+                    let _ = rq.respond(response);
+                    code
+                };
+                if let Some(output) = self.output.as_mut() {
+                    output.write_all(&format!(" - {}\n", code.0).as_bytes()).unwrap();
+                    output.flush().unwrap();
                 }
             }
         }

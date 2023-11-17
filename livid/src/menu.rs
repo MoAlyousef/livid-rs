@@ -83,7 +83,6 @@ impl WidgetBase for NavBar {
 
 impl WidgetExt for NavBar {}
 
-
 #[derive(Debug, Clone)]
 pub struct MenuBar {
     inner: Widget,

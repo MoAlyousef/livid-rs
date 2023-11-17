@@ -1,5 +1,5 @@
-use wasm_bindgen::prelude::*;
 use js_sys::Reflect;
+use wasm_bindgen::prelude::*;
 
 pub fn call(method: &str, args: &[&str]) -> Result<JsValue, JsValue> {
     let obj = crate::document::Document::window();
@@ -27,5 +27,7 @@ pub fn get_variable(name: &str) -> Result<JsValue, JsValue> {
 }
 
 pub fn alert(msg: &str) {
-    crate::document::Document::window().alert_with_message(msg).unwrap_throw();
+    crate::document::Document::window()
+        .alert_with_message(msg)
+        .unwrap_throw();
 }

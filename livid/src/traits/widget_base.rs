@@ -1,8 +1,13 @@
 use crate::{enums::*, widget::Widget};
 
 pub trait WidgetBase {
-    fn default() -> Self where Self: Sized;
-    fn default_fill() -> Self where Self: Sized {
+    fn default() -> Self
+    where
+        Self: Sized;
+    fn default_fill() -> Self
+    where
+        Self: Sized,
+    {
         let s = Self::default();
         s.inner().set_style(Style::Width, "100%");
         s.inner().set_style(Style::Height, "100%");
@@ -25,7 +30,9 @@ pub trait WidgetBase {
     /// Create a typed widget from `widget::Widget`
     /// # Safety
     /// The types must be compatible
-    unsafe fn from_widget(widget: &Widget) -> Self where Self: Sized;
+    unsafe fn from_widget(widget: &Widget) -> Self
+    where
+        Self: Sized;
     /// inner
     fn inner(&self) -> Widget;
 }

@@ -1,5 +1,5 @@
-use crate::traits::widget_base::WidgetBase;
 use crate::enums::{AlignContent, Style};
+use crate::traits::widget_base::WidgetBase;
 use crate::traits::WidgetExt;
 
 pub trait GroupExt: WidgetExt {
@@ -12,10 +12,16 @@ pub trait GroupExt: WidgetExt {
     fn clear(&self) {
         self.inner().set_inner_html("");
     }
-    fn add<W: WidgetExt>(&self, widget: &W) where Self: Sized {
+    fn add<W: WidgetExt>(&self, widget: &W)
+    where
+        Self: Sized,
+    {
         self.inner().append(&widget.inner());
     }
-    fn remove<W: WidgetExt>(&self, widget: &W) where Self: Sized {
+    fn remove<W: WidgetExt>(&self, widget: &W)
+    where
+        Self: Sized,
+    {
         self.inner().remove(&widget.inner());
     }
     fn set_align_content(&self, align: AlignContent) {
@@ -29,7 +35,7 @@ pub trait GroupExt: WidgetExt {
         let mut v: Vec<Box<dyn WidgetExt>> = vec![];
         let c = self.inner().children();
         for e in c.iter() {
-            let f = unsafe {crate::frame::Label::from_widget(&e)};
+            let f = unsafe { crate::frame::Label::from_widget(&e) };
             v.push(Box::new(f));
         }
         v
