@@ -38,7 +38,7 @@ The dist folder should contain the index.html plus the wasm and javascript glue 
 */
 #![allow(clippy::needless_doctest_main)]
 
-pub mod wv;
+use wv_sys::*;
 use livid_server::Server;
 use std::path::PathBuf;
 
@@ -66,36 +66,29 @@ impl Default for Settings {
     }
 }
 
-#[cfg(target_os = "macos")]
-extern "C" {
-    fn add_nsmenu(val: bool);
-}
-
 pub struct App {
-    wv: wv::Webview,
+    wv: Webview,
     settings: Settings,
 }
 
 impl App {
     /// Create a new app
     pub fn new(settings: Settings) -> Self {
-        let mut wv = wv::Webview::create(settings.debug);
+        let mut wv = Webview::create_no_win(settings.debug);
         wv.set_title(settings.title);
         wv.set_size(
             settings.w,
             settings.h,
             if settings.fixed {
-                wv::SizeHint::Fixed
+                SizeHint::Fixed
             } else {
-                wv::SizeHint::None
+                SizeHint::None
             },
         );
-        #[cfg(target_os = "macos")]
-        add_nsmenu();
         Self { wv, settings }
     }
     /// Get the webview of the app
-    pub fn get_webview(&self) -> wv::Webview {
+    pub fn get_webview(&self) -> Webview {
         self.wv.clone()
     }
     /// Run the app
