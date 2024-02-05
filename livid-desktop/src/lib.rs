@@ -38,7 +38,7 @@ The dist folder should contain the index.html plus the wasm and javascript glue 
 */
 #![allow(clippy::needless_doctest_main)]
 
-use wv_sys::*;
+use wv::*;
 use livid_server::Server;
 use std::path::PathBuf;
 

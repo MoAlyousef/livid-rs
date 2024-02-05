@@ -1,6 +1,6 @@
 [package]
 name = "livid-desktop"
-version = "0.1.7"
+version = "0.1.8"
 edition = "2021"
 description = "Lightly wraps a native webview which can be used with livid for the frontend"
 repository = "https://github.com/MoAlyousef/livid-rs"
@@ -13,5 +13,5 @@ license = "MIT"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-wv-sys = "0.1.1"
+wv = "0.1.0"
 livid-server = { version = "0.2", path = "../livid-server" }
